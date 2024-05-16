@@ -5,3 +5,9 @@
   left: 0;
   right: 0;
 }
+
+.button-position {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+}

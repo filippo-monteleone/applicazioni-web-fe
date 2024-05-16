@@ -1,0 +1,57 @@
+@if (data.type == 'buy') { @if (phase == 1) {
+<div class="buy-container">
+  <h1>Charge your car</h1>
+  <p>
+    Need to charge your car? Simple! Bring the slider value to the desired
+    percentage.
+  </p>
+</div>
+<mat-slider min="20" max="100" discrete [displayWith]="formatLabel">
+  <input value="30" matSliderThumb #value />
+</mat-slider>
+<h4 class="cost">
+  Cost: <b>{{ calculateCost(value.value) }}</b>
+</h4>
+<button mat-button class="btn-next" (click)="nextPhase()">Next</button>
+} @else if(phase == 2) {
+<div>fase 2</div>
+} } @else {
+<h2 mat-dialog-title>My Profile</h2>
+<mat-dialog-content>
+  <div class="container">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Personal data </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="test">
+        <mat-form-field>
+          <mat-label>Balance - €</mat-label>
+          <input matInput type="number" min="0" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Battery size - KW</mat-label>
+          <input matInput type="number" min="1" />
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Subscription </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="content">
+        <span>Do you want to become a premium user?</span>
+        <span class="spacer"></span>
+        <mat-slide-toggle></mat-slide-toggle>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close color="warn">Don't save</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Save</button>
+</mat-dialog-actions>
+}

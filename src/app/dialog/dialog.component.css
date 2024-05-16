@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content {
+  display: flex;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.test {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 425px) {
+  .test {
+    display: flex;
+    flex-direction: row;
+
+    gap: 1.5rem;
+  }
+}
+
+.buy-container {
+  padding: 1rem;
+}
+
+.cost {
+  text-align: center;
+}
+
+.mat-mdc-slider {
+  margin: 0rem 4rem;
+}
+
+.btn-next {
+  margin: 0.5rem auto;
+  width: fit-content;
+}

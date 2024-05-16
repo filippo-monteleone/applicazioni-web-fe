@@ -1,0 +1,28 @@
+<mat-sidenav-container class="example-container">
+  <mat-sidenav [(opened)]="opened">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <button mat-button (click)="openDialog()">
+          <mat-icon>person</mat-icon>
+          <span>My Profile</span>
+        </button>
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <a mat-button href="/" color="warn">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Log out</span>
+        </a>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="button-position">
+      <button mat-raised-button extended (click)="openSidebar()">
+        <mat-icon>menu</mat-icon>
+        <span> 200€</span>
+      </button>
+    </div>
+    <!-- <app-parking></app-parking> -->
+    <app-marker></app-marker>
+  </mat-sidenav-content>
+</mat-sidenav-container>
