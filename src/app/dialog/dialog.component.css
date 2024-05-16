@@ -43,3 +43,17 @@
   margin: 0.5rem auto;
   width: fit-content;
 }
+
+.estimeted-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.waiting-cars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0 0.5rem;
+}

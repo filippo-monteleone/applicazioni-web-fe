@@ -14,7 +14,26 @@
 </h4>
 <button mat-button class="btn-next" (click)="nextPhase()">Next</button>
 } @else if(phase == 2) {
-<div>fase 2</div>
+<div class="buy-container">
+  <h1>Booking Details</h1>
+  <p>
+    Ready to start your recharge? Press 'Accept' and follow the directions to
+    the parking lot. Have a safe journey!
+  </p>
+</div>
+<div class="estimeted-time">
+  <p>Your estimated wait is</p>
+  <h1><b>3 hrs 20 mins</b></h1>
+</div>
+<div class="waiting-cars">
+  <mat-icon>directions_car</mat-icon>
+  <span>4 cars in front</span>
+</div>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close color="warn">Refuse</button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Accept</button>
+</mat-dialog-actions>
+
 } } @else {
 <h2 mat-dialog-title>My Profile</h2>
 <mat-dialog-content>

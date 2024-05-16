@@ -16,7 +16,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-dialog',
