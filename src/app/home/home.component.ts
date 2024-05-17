@@ -10,6 +10,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { MatCardModule } from '@angular/material/card';
 import { ParkingComponent } from '../parking/parking.component';
 import { MarkerComponent } from '../marker/marker.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ import { MarkerComponent } from '../marker/marker.component';
     MatCardModule,
     ParkingComponent,
     MarkerComponent,
+    MapComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

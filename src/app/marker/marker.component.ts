@@ -15,7 +15,6 @@ export class MarkerComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog(): void {
-    console.log('test');
     this.dialog.open(DialogComponent, {
       data: { type: 'buy' },
       width: 'auto',
