@@ -38,8 +38,12 @@ L.Marker.prototype.options.icon = iconDefault;
 })
 export class MapComponent {
   private map: L.Map | undefined;
-  @Output() opened = new EventEmitter<boolean>();
+  @Output() opened = new EventEmitter<any>();
   didOpen: boolean = false;
+
+  firstWaypoint: L.LatLng | undefined;
+  myPosition: L.LatLng | undefined;
+  route: L.Routing.Control | undefined;
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -60,12 +64,14 @@ export class MapComponent {
 
     tiles.addTo(this.map);
 
-    L.Routing.control({
+    this.route = L.Routing.control({
       router: L.Routing.osrmv1({
         serviceUrl: `http://router.project-osrm.org/route/v1/`,
       }),
       waypoints: [L.latLng(57.74, 11.94), L.latLng(57.6792, 11.949)],
     }).addTo(this.map);
+
+    this.route.remove();
 
     console.log(
       this.map.getContainer().querySelector('.leaflet-routing-container')
@@ -73,21 +79,43 @@ export class MapComponent {
 
     this.map
       .getContainer()
-      .querySelector('.leaflet-routing-container')
+      .querySelector('.leaflet-control-container')
       ?.remove();
   }
 
   constructor(private markerService: MarkerService, public dialog: MatDialog) {
     markerService.openedDialog$.subscribe((marker) => {
+      console.log(marker);
+
+      this.firstWaypoint = new L.LatLng(marker.latlng.lat, marker.latlng.lng);
+
+      if (this.map && this.firstWaypoint && this.myPosition) {
+        this.route?.remove();
+        this.route = L.Routing.control({
+          router: L.Routing.osrmv1({
+            serviceUrl: `http://router.project-osrm.org/route/v1/`,
+          }),
+          waypoints: [this.firstWaypoint, this.myPosition],
+        }).addTo(this.map);
+      }
+
+      console.log(this.firstWaypoint, this.myPosition);
+
       this.dialog.open(DialogComponent, {
         data: { type: 'buy' },
         width: 'auto',
       });
-      console.log(marker);
     });
   }
 
   ngAfterViewInit(): void {
+    if (navigator.geolocation)
+      navigator.geolocation.getCurrentPosition((pos) => {
+        this.myPosition = new L.LatLng(
+          pos.coords.latitude,
+          pos.coords.longitude
+        );
+      });
     this.initMap();
     this.markerService.makeParkingMarkers(this.map);
   }
