@@ -11,7 +11,11 @@ import { ParkingComponent } from '../parking/parking.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MarkerService } from '../marker.service';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
@@ -32,7 +36,7 @@ L.Marker.prototype.options.icon = iconDefault;
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [ParkingComponent, MatButtonModule, MatIcon],
+  imports: [ParkingComponent, MatButtonModule, MatIcon, MatDialogModule],
   templateUrl: './map.component.html',
   styleUrl: './map.component.css',
 })
@@ -64,19 +68,6 @@ export class MapComponent {
 
     tiles.addTo(this.map);
 
-    this.route = L.Routing.control({
-      router: L.Routing.osrmv1({
-        serviceUrl: `http://router.project-osrm.org/route/v1/`,
-      }),
-      waypoints: [L.latLng(57.74, 11.94), L.latLng(57.6792, 11.949)],
-    }).addTo(this.map);
-
-    this.route.remove();
-
-    console.log(
-      this.map.getContainer().querySelector('.leaflet-routing-container')
-    );
-
     this.map
       .getContainer()
       .querySelector('.leaflet-control-container')
@@ -89,21 +80,32 @@ export class MapComponent {
 
       this.firstWaypoint = new L.LatLng(marker.latlng.lat, marker.latlng.lng);
 
-      if (this.map && this.firstWaypoint && this.myPosition) {
-        this.route?.remove();
-        this.route = L.Routing.control({
-          router: L.Routing.osrmv1({
-            serviceUrl: `http://router.project-osrm.org/route/v1/`,
-          }),
-          waypoints: [this.firstWaypoint, this.myPosition],
-        }).addTo(this.map);
-      }
+      // if (this.map && this.firstWaypoint && this.myPosition) {
+      //   this.route?.remove();
+      //   this.route = L.Routing.control({
+      //     router: L.Routing.osrmv1({
+      //       serviceUrl: `http://router.project-osrm.org/route/v1/`,
+      //     }),
+      //     waypoints: [this.firstWaypoint, this.myPosition],
+      //   }).addTo(this.map);
+      // }
 
-      console.log(this.firstWaypoint, this.myPosition);
-
-      this.dialog.open(DialogComponent, {
+      let mydialog = this.dialog.open(DialogComponent, {
         data: { type: 'buy' },
         width: 'auto',
+      });
+
+      mydialog.afterClosed().subscribe((result) => {
+        if (result)
+          if (this.map && this.firstWaypoint && this.myPosition) {
+            this.route?.remove();
+            this.route = L.Routing.control({
+              router: L.Routing.osrmv1({
+                serviceUrl: `http://router.project-osrm.org/route/v1/`,
+              }),
+              waypoints: [this.firstWaypoint, this.myPosition],
+            }).addTo(this.map);
+          }
       });
     });
   }

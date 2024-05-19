@@ -5,6 +5,7 @@ import {
   MatDialogTitle,
   MatDialogContent,
   MAT_DIALOG_DATA,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -16,6 +17,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-dialog',
@@ -45,7 +47,8 @@ export class DialogComponent {
   phase: number;
 
   data: { type: string } = inject(MAT_DIALOG_DATA) ?? { type: '' };
-  constructor() {
+
+  constructor(public dialogRef: MatDialogRef<DialogComponent>) {
     this.phase = 1;
     this.energyCost = 0.2;
     this.subscription = false;
@@ -53,6 +56,7 @@ export class DialogComponent {
 
   nextPhase() {
     this.phase++;
+    if (this.phase == 3) this.dialogRef.close(true);
   }
 
   formatLabel(value: number): string {

@@ -1,4 +1,4 @@
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container class="container">
   <mat-sidenav [(opened)]="opened">
     <mat-toolbar>
       <mat-toolbar-row>
@@ -16,16 +16,6 @@
     </mat-toolbar>
   </mat-sidenav>
   <mat-sidenav-content>
-    <!-- <div class="button-position">
-      <button mat-raised-button extended (click)="openSidebar()">
-        <mat-icon>menu</mat-icon>
-        <span> 200€</span>
-      </button>
-    </div> -->
     <app-map (opened)="openSidebar()"></app-map>
-    <div class="test">
-      <!-- <app-parking class="test2"></app-parking> -->
-    </div>
-    <!-- <app-marker></app-marker> -->
   </mat-sidenav-content>
 </mat-sidenav-container>
