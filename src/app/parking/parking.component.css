@@ -5,7 +5,7 @@
   gap: 0.3rem;
 }
 
-.my-flex-1 {
+.head-info {
   display: flex;
   flex-direction: column;
 }
@@ -29,16 +29,16 @@
   }
 }
 
-.my-text {
+.sub-text {
   text-align: center;
 }
 
-.my-flex-2 {
+.container {
   display: flex;
   flex-direction: row;
 }
 
-.my-flex-3 {
+.info {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,4 +52,47 @@ h1 {
 .mat-mdc-card-actions {
   display: flex;
   justify-content: center;
+}
+
+/* .mat-mdc-card.retract {
+  animation: retract 0.5s forwards;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes retract {
+  from {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  to {
+    left: 50%;
+    transform: translate(-50%, -150%);
+  }
+} */
+
+.mat-mdc-card:not(.extend) {
+  animation: retract 0.5s forwards;
+}
+
+.mat-mdc-card.extend {
+  animation: extend 0.5s forwards;
+}
+
+@keyframes retract {
+  to {
+    transform: translate(-50%, -150%);
+  }
+  from {
+    transform: translate(-50%, 0%);
+  }
+}
+
+@keyframes extend {
+  from {
+    transform: translate(-50%, -150%);
+  }
+  to {
+    transform: translate(-50%, 0%);
+  }
 }

@@ -17,6 +17,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
+import { Subject } from 'rxjs';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -48,6 +49,8 @@ export class MapComponent {
   firstWaypoint: L.LatLng | undefined;
   myPosition: L.LatLng | undefined;
   route: L.Routing.Control | undefined;
+
+  changingValue: Subject<boolean> = new Subject();
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -96,7 +99,7 @@ export class MapComponent {
       });
 
       mydialog.afterClosed().subscribe((result) => {
-        if (result)
+        if (result) {
           if (this.map && this.firstWaypoint && this.myPosition) {
             this.route?.remove();
             this.route = L.Routing.control({
@@ -106,6 +109,9 @@ export class MapComponent {
               waypoints: [this.firstWaypoint, this.myPosition],
             }).addTo(this.map);
           }
+
+          this.changingValue.next(true);
+        }
       });
     });
   }

@@ -1,6 +1,7 @@
-<mat-card>
-  <div class="my-flex-2">
-    <div class="my-flex-1">
+@if (init) {
+<mat-card [class.retract]="shouldRetract" [class.extend]="expand">
+  <div class="container">
+    <div class="head-info">
       <mat-card-header>
         <mat-card-title-group>
           <mat-card-title>Hartono Mail</mat-card-title>
@@ -24,12 +25,25 @@
         </mat-chip-set>
       </mat-card-content>
     </div>
-    <div class="my-flex-3">
+    <div class="info">
+      @if (arrived) {
+      <h1><b>22%</b></h1>
+      <span class="sub-text">Charging...</span>
+      } @else {
       <h1><b>20</b></h1>
-      <span class="my-text">Cars in front</span>
+      <span class="sub-text">Cars in front</span>
+      }
     </div>
   </div>
   <mat-card-actions>
+    @if (arrived) {
+    <button mat-flat-button color="warn" (click)="retract()">
+      Leave and pay {{ price }}€
+    </button>
+    } @else {
     <button mat-flat-button color="warn">Leave</button>
+    }
   </mat-card-actions>
 </mat-card>
+
+}
