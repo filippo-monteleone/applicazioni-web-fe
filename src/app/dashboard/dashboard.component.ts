@@ -8,8 +8,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { Location } from '@angular/common';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
-const ELEMENT_DATA: PeriodicElement[] = [
+const PARK_DATA: ParkSpot[] = [
   { position: 1, name: 'Hydrogen', free: true },
   { position: 2, name: 'Helium', free: true },
   { position: 3, name: 'Lithium', free: true },
@@ -22,7 +24,18 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { position: 10, name: 'Neon', free: true },
 ];
 
-export interface PeriodicElement {
+const PAY_DATA: Payment[] = [
+  { type: 'Parking', name: 'Boron', userType: 'Premium', cost: 25.5 },
+];
+
+export interface Payment {
+  type: string;
+  name: string;
+  userType: string;
+  cost: number;
+}
+
+export interface ParkSpot {
   name: string;
   position: number;
   free: boolean;
@@ -40,6 +53,8 @@ export interface PeriodicElement {
     MatInputModule,
     FormsModule,
     MatIcon,
+    MatPaginatorModule,
+    MatCheckboxModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -47,8 +62,14 @@ export interface PeriodicElement {
 export class DashboardComponent {
   selectedVal: string | undefined;
   price: number | undefined;
-  dataSource = ELEMENT_DATA;
+  parkSource = PARK_DATA;
+  paymentSource = PAY_DATA;
+
   displayedColumns: string[] = ['position', 'name'];
+  paymentDisplayedColumns: string[] = ['Paid for', 'Username', 'Type', 'Cost'];
+
+  hidePageSize: boolean = true;
+
   constructor(private _location: Location) {}
 
   ngOnInit() {
@@ -58,6 +79,10 @@ export class DashboardComponent {
   public onValChange(val: string) {
     console.log(this.selectedVal);
     this.selectedVal = val;
+  }
+
+  handlePageEvent(e: PageEvent) {
+    console.log(e);
   }
 
   back() {

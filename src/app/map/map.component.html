@@ -1,7 +1,11 @@
 <div class="map-container">
   <div class="map-frame">
     <div id="map"></div>
-    <app-parking class="test" [shouldExpand]="changingValue"></app-parking>
+    <app-parking
+      class="test"
+      [shouldExpand]="changingValue"
+      (shouldRetractSub)="leftParking()"
+    ></app-parking>
     <button mat-raised-button extended (click)="openSidebar()" class="test1">
       <mat-icon>menu</mat-icon>
       <span> 200€</span>

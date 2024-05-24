@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,6 +19,7 @@ export class ParkingComponent {
   expand: boolean = false;
   init: boolean = false;
   @Input() shouldExpand: Subject<boolean> = new Subject();
+  @Output() shouldRetractSub: EventEmitter<boolean> = new EventEmitter();
 
   constructor() {
     setInterval(() => {
@@ -38,6 +39,7 @@ export class ParkingComponent {
 
   retract() {
     this.expand = false;
+    this.shouldRetractSub.emit(true);
     // this.shouldRetract = true;
   }
 }

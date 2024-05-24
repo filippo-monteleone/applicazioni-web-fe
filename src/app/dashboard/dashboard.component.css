@@ -13,6 +13,10 @@
   margin-bottom: 0;
 }
 
+.mat-expansion-panel {
+  margin: 2rem 0;
+}
+
 .container {
   max-width: 37.5rem;
   width: 100%;

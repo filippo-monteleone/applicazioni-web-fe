@@ -51,6 +51,7 @@ export class MapComponent {
   route: L.Routing.Control | undefined;
 
   changingValue: Subject<boolean> = new Subject();
+  retracted: Subject<boolean> = new Subject();
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -83,16 +84,6 @@ export class MapComponent {
 
       this.firstWaypoint = new L.LatLng(marker.latlng.lat, marker.latlng.lng);
 
-      // if (this.map && this.firstWaypoint && this.myPosition) {
-      //   this.route?.remove();
-      //   this.route = L.Routing.control({
-      //     router: L.Routing.osrmv1({
-      //       serviceUrl: `http://router.project-osrm.org/route/v1/`,
-      //     }),
-      //     waypoints: [this.firstWaypoint, this.myPosition],
-      //   }).addTo(this.map);
-      // }
-
       let mydialog = this.dialog.open(DialogComponent, {
         data: { type: 'buy' },
         width: 'auto',
@@ -109,7 +100,6 @@ export class MapComponent {
               waypoints: [this.firstWaypoint, this.myPosition],
             }).addTo(this.map);
           }
-
           this.changingValue.next(true);
         }
       });
@@ -126,6 +116,10 @@ export class MapComponent {
       });
     this.initMap();
     this.markerService.makeParkingMarkers(this.map);
+  }
+
+  leftParking() {
+    this.route?.remove();
   }
 
   openSidebar(): void {
