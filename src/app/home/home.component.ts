@@ -11,6 +11,9 @@ import { MatCardModule } from '@angular/material/card';
 import { ParkingComponent } from '../parking/parking.component';
 import { MarkerComponent } from '../marker/marker.component';
 import { MapComponent } from '../map/map.component';
+import { SharedHomeDashboardService } from '../shared-home-dashboard.service';
+import { Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -32,10 +35,22 @@ import { MapComponent } from '../map/map.component';
 })
 export class HomeComponent {
   opened: boolean = false;
-  constructor(public dialog: MatDialog) {}
+
+  constructor(public dialog: MatDialog, private route: ActivatedRoute) {}
 
   openSidebar(): void {
     this.opened = true;
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => console.log(params));
+
+    // this.sharedService
+    //   .getData()
+    //   .pipe(takeUntil(this.unsubscribe))
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //   });
   }
 
   openDialog(): void {

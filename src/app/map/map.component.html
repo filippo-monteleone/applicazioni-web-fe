@@ -6,9 +6,26 @@
       [shouldExpand]="changingValue"
       (shouldRetractSub)="leftParking()"
     ></app-parking>
-    <button mat-raised-button extended (click)="openSidebar()" class="test1">
+    <app-place-car-park class="test" [hidden]="!hideUi"></app-place-car-park>
+    <button
+      mat-raised-button
+      extended
+      (click)="openSidebar()"
+      class="menu-btn"
+      [hidden]="hideUi"
+    >
       <mat-icon>menu</mat-icon>
       <span> 200€</span>
+    </button>
+    <button
+      mat-raised-button
+      extended
+      class="add-btn"
+      [hidden]="hideUi"
+      (click)="placeMarkerMode()"
+    >
+      <mat-icon>add</mat-icon>
+      Add Car Park
     </button>
   </div>
 </div>

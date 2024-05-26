@@ -18,6 +18,8 @@ import {
 } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { Subject } from 'rxjs';
+import { PlaceCarParkComponent } from '../place-car-park/place-car-park.component';
+import { Router } from '@angular/router';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -37,7 +39,13 @@ L.Marker.prototype.options.icon = iconDefault;
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [ParkingComponent, MatButtonModule, MatIcon, MatDialogModule],
+  imports: [
+    ParkingComponent,
+    MatButtonModule,
+    MatIcon,
+    MatDialogModule,
+    PlaceCarParkComponent,
+  ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.css',
 })
@@ -52,6 +60,8 @@ export class MapComponent {
 
   changingValue: Subject<boolean> = new Subject();
   retracted: Subject<boolean> = new Subject();
+
+  hideUi: boolean = false;
 
   private initMap(): void {
     this.map = L.map('map', {
@@ -72,14 +82,24 @@ export class MapComponent {
 
     tiles.addTo(this.map);
 
+    this.map.on('click', (e) => {
+      if (this.hideUi) this.routerNav.navigate(['']);
+      console.log(e.latlng);
+    });
+
     this.map
       .getContainer()
       .querySelector('.leaflet-control-container')
       ?.remove();
   }
 
-  constructor(private markerService: MarkerService, public dialog: MatDialog) {
+  constructor(
+    private markerService: MarkerService,
+    public dialog: MatDialog,
+    private routerNav: Router
+  ) {
     markerService.openedDialog$.subscribe((marker) => {
+      if (this.hideUi) return;
       console.log(marker);
 
       this.firstWaypoint = new L.LatLng(marker.latlng.lat, marker.latlng.lng);
@@ -100,7 +120,7 @@ export class MapComponent {
               waypoints: [this.firstWaypoint, this.myPosition],
             }).addTo(this.map);
           }
-          this.changingValue.next(true);
+          if (!this.hideUi) this.changingValue.next(true);
         }
       });
     });
@@ -120,6 +140,10 @@ export class MapComponent {
 
   leftParking() {
     this.route?.remove();
+  }
+
+  placeMarkerMode() {
+    this.hideUi = true;
   }
 
   openSidebar(): void {

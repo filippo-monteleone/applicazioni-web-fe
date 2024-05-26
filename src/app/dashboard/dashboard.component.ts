@@ -10,6 +10,9 @@ import { MatIcon } from '@angular/material/icon';
 import { Location } from '@angular/common';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { SharedHomeDashboardService } from '../shared-home-dashboard.service';
+import { NavigationExtras, Router } from '@angular/router';
 
 const PARK_DATA: ParkSpot[] = [
   { position: 1, name: 'Hydrogen', free: true },
@@ -55,6 +58,7 @@ export interface ParkSpot {
     MatIcon,
     MatPaginatorModule,
     MatCheckboxModule,
+    MatButtonModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -70,7 +74,7 @@ export class DashboardComponent {
 
   hidePageSize: boolean = true;
 
-  constructor(private _location: Location) {}
+  constructor(private _location: Location, private router: Router) {}
 
   ngOnInit() {
     this.selectedVal = 'carparks';
@@ -87,5 +91,14 @@ export class DashboardComponent {
 
   back() {
     this._location.back();
+  }
+
+  openMap() {
+    let navigationExtras: NavigationExtras = {
+      queryParams: { test: true },
+    };
+
+    this.router.navigate(['/'], navigationExtras);
+    // this.sharedService.setData('Close');
   }
 }

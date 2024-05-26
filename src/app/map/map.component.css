@@ -11,11 +11,18 @@
   height: 100%;
 }
 
-.test1 {
+.menu-btn {
   z-index: 100000;
   position: absolute;
   bottom: 2rem;
   left: 2rem;
+}
+
+.add-btn {
+  z-index: 100000;
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
 }
 
 .test {

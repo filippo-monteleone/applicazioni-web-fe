@@ -1,0 +1,83 @@
+.container {
+  display: flex;
+  justify-items: center;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.head-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-mdc-card {
+  padding: 0.5rem 1rem;
+  width: 100%;
+  left: 50%;
+}
+.button-position {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+}
+
+@media (min-width: 768px) {
+  .mat-mdc-card {
+    padding: 0.5rem 1rem;
+    width: fit-content;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.sub-text {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+.mat-mdc-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-mdc-card:not(.extend) {
+  animation: retract 0.5s forwards;
+}
+
+.mat-mdc-card.extend {
+  animation: extend 0.5s forwards;
+}
+
+@keyframes retract {
+  to {
+    transform: translate(-50%, -150%);
+  }
+  from {
+    transform: translate(-50%, 0%);
+  }
+}
+
+@keyframes extend {
+  from {
+    transform: translate(-50%, -150%);
+  }
+  to {
+    transform: translate(-50%, 0%);
+  }
+}
