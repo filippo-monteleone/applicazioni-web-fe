@@ -63,6 +63,8 @@ export class MapComponent {
 
   hideUi: boolean = false;
 
+  @ViewChild(PlaceCarParkComponent) pcp!: PlaceCarParkComponent;
+
   private initMap(): void {
     this.map = L.map('map', {
       zoomControl: false,
@@ -83,8 +85,15 @@ export class MapComponent {
     tiles.addTo(this.map);
 
     this.map.on('click', (e) => {
-      if (this.hideUi) this.routerNav.navigate(['']);
-      console.log(e.latlng);
+      if (this.hideUi) {
+        this.routerNav.navigate(['new-carpark'], {
+          queryParams: {
+            lat: e.latlng.lat,
+            lng: e.latlng.lng,
+          },
+        });
+        console.log('ciao');
+      }
     });
 
     this.map
@@ -144,6 +153,14 @@ export class MapComponent {
 
   placeMarkerMode() {
     this.hideUi = true;
+    this.pcp.expand = true;
+  }
+
+  showUi() {
+    this.hideUi = false;
+    this.pcp.expand = false;
+    this.pcp.retract = true;
+    console.log(this.pcp.expand);
   }
 
   openSidebar(): void {

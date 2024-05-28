@@ -23,7 +23,7 @@ export class ParkingComponent {
 
   constructor() {
     setInterval(() => {
-      console.log(this.shouldRetract);
+      // console.log(this.shouldRetract);
       // this.shouldExpand = !this.shouldExpand;
       this.price += 0.1;
     }, 2000);

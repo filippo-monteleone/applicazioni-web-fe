@@ -1,8 +1,7 @@
 .container {
   display: flex;
-  justify-items: center;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   gap: 0.3rem;
 }
 
@@ -80,4 +79,32 @@ h1 {
   to {
     transform: translate(-50%, 0%);
   }
+}
+
+.text {
+  white-space: pre-line;
+}
+
+.close {
+  position: absolute;
+  top: 0rem;
+  right: 0rem;
+}
+
+.icon-container {
+  border-left: 0.2rem solid #f44336;
+  display: flex;
+  flex-direction: column;
+}
+
+.icon-container > * {
+  margin: auto 0.5rem;
+}
+
+.space {
+  min-height: 1rem;
+}
+
+.nb-container {
+  margin-bottom: 0.5rem;
 }

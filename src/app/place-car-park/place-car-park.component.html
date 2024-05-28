@@ -1,3 +1,23 @@
-<mat-card [class.extend]="expand">
-  <h1>Click where the new parking lot is located</h1>
+<mat-card [class.retract]="retract" [class.extend]="expand">
+  <div class="container">
+    <div class="icon-container">
+      <mat-icon color="warn">warning</mat-icon>
+    </div>
+    <div class="text-container">
+      <h3><b>Please select a location</b></h3>
+      <p class="text">
+        Click or tap on the map to mark the location of the new parking lot.
+        <br />
+        Then, you will be redirected to another page to provide additional
+        information. <br />
+      </p>
+      <div class="nb-container">
+        <b>NB: </b>If you don't want to add a parking lot, press the close
+        button at the top right of this alert.
+      </div>
+    </div>
+  </div>
+  <button mat-icon-button color="warn" class="close" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-card>

@@ -6,7 +6,10 @@
       [shouldExpand]="changingValue"
       (shouldRetractSub)="leftParking()"
     ></app-parking>
-    <app-place-car-park class="test" [hidden]="!hideUi"></app-place-car-park>
+    <app-place-car-park
+      class="test"
+      (closeEvent)="showUi()"
+    ></app-place-car-park>
     <button
       mat-raised-button
       extended
