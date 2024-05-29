@@ -14,10 +14,16 @@
   margin: auto;
 }
 
-.price-container {
+form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.btn-social {
+  width: fit-content;
+  height: fit-content;
+  margin-bottom: 1.5rem;
 }
 
 .back-container {
@@ -33,7 +39,7 @@
 }
 
 @media (min-width: 768px) {
-  .price-container {
+  form {
     display: flex;
     flex-direction: row;
 

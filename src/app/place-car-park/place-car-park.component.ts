@@ -13,6 +13,7 @@ import { MatIcon } from '@angular/material/icon';
 export class PlaceCarParkComponent {
   expand: boolean = false;
   retract: boolean = true;
+  init: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
   constructor() {

@@ -154,6 +154,7 @@ export class MapComponent {
   placeMarkerMode() {
     this.hideUi = true;
     this.pcp.expand = true;
+    this.pcp.init = true;
   }
 
   showUi() {

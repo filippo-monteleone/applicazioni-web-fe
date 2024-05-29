@@ -1,1 +1,24 @@
-<p>new-car-park works!</p>
+<div class="container">
+  <span class="back-container" (click)="back()">
+    <mat-icon>arrow_back_ios</mat-icon>
+    <h2>Back</h2>
+  </span>
+  <h2>Create a new car park</h2>
+  <form>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Ex. Vigevano Car Park" />
+    </mat-form-field>
+    <div class="price-container">
+      <mat-form-field>
+        <mat-label>Park rate</mat-label>
+        <input matInput placeholder="Ex. 3,0 h/€" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Charge rate</mat-label>
+        <input matInput placeholder="Ex. 0,5 KW/€" />
+      </mat-form-field>
+    </div>
+  </form>
+  <button mat-flat-button color="primary">Create</button>
+</div>
