@@ -45,17 +45,18 @@ export class LoginComponent {
     private router: Router
   ) {}
 
-  onSumbit() {
+  async onSumbit() {
     console.log(this.loginForm);
 
     const username = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
 
     if (username && password) {
-      if (this.authService.login(username, password)) {
-        this.router.navigate(['/']);
-      } else {
-      }
+      this.authService.login(username, password);
+      this.authService.user.subscribe((data) => {
+        console.log(data);
+        if (data != '') this.router.navigate(['/']);
+      });
     }
 
     console.log(username, password);

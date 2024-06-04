@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ReplaySubject, Subject, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -6,23 +8,45 @@ import { Injectable } from '@angular/core';
 export class AuthServiceService {
   private isAuthenticated = false;
   private authSecretKey = 'Bearer Token';
+  public user = new Subject<string>();
+  public username = new ReplaySubject<string>();
 
-  constructor() {
+  constructor(public http: HttpClient) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
+    this.user.next('');
   }
 
-  login(username: string, password: string): boolean {
-    if (username === 'Test' && password === 'Test') {
+  login(username: string, password: string) {
+    this.http.post('api/login', { username, password }).subscribe(() => {
+      this.http.get<{ username: string }>('/api/user').subscribe((user) => {
+        this.username.next(username);
+        this.user.next(user.username);
+      });
+
       const authToken = 'testoken';
       localStorage.setItem(this.authSecretKey, authToken);
       this.isAuthenticated = true;
-      return true;
-    } else {
-      return false;
-    }
+    });
+  }
+
+  register(username: string, password: string) {
+    this.http.post('api/register', { username, password }).subscribe((_) => {
+      this.http.get<{ username: string }>('/api/user').subscribe((user) => {
+        this.username.next(username);
+        this.user.next(user.username);
+      });
+
+      const authToken = 'testoken';
+      localStorage.setItem(this.authSecretKey, authToken);
+      this.isAuthenticated = true;
+    });
   }
 
   isAuthenticatedUser(): boolean {
     return this.isAuthenticated;
+  }
+
+  getUser() {
+    console.log(this.username);
   }
 }

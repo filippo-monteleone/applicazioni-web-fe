@@ -1,6 +1,7 @@
 <mat-sidenav-container class="container">
   <mat-sidenav [(opened)]="opened">
     <mat-toolbar>
+      {{ username }}
       <mat-toolbar-row>
         <button mat-button (click)="openDialog()">
           <mat-icon>person</mat-icon>

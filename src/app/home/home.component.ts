@@ -14,6 +14,7 @@ import { MapComponent } from '../map/map.component';
 import { SharedHomeDashboardService } from '../shared-home-dashboard.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { AuthServiceService } from '../auth-service.service';
 
 @Component({
   selector: 'app-home',
@@ -35,8 +36,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent {
   opened: boolean = false;
+  username: string = '';
 
-  constructor(public dialog: MatDialog, private route: ActivatedRoute) {}
+  constructor(
+    public dialog: MatDialog,
+    private route: ActivatedRoute,
+    private auth: AuthServiceService
+  ) {}
 
   openSidebar(): void {
     this.opened = true;
@@ -44,7 +50,7 @@ export class HomeComponent {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => console.log(params));
-
+    this.auth.username.subscribe((val) => (this.username = val));
     // this.sharedService
     //   .getData()
     //   .pipe(takeUntil(this.unsubscribe))

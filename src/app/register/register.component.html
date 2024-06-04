@@ -3,15 +3,19 @@
   <button mat-raised-button class="btn-social">
     <img src="assets/google.svg" />
   </button>
-  <form>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input matInput placeholder="Ex. esempio@gmail.com" />
+      <input
+        matInput
+        placeholder="Ex. esempio@gmail.com"
+        formControlName="email"
+      />
     </mat-form-field>
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input matInput />
+      <input matInput formControlName="password" />
     </mat-form-field>
+    <button mat-flat-button color="primary">Register</button>
   </form>
-  <button mat-flat-button color="primary">Register</button>
 </div>
