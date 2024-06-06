@@ -1,6 +1,6 @@
 <div class="container">
   <h2>Login</h2>
-  <button mat-raised-button class="btn-social">
+  <button mat-raised-button class="btn-social" (click)="google()">
     <img src="assets/google.svg" />
   </button>
   <form [formGroup]="loginForm" (ngSubmit)="onSumbit()">

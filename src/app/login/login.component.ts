@@ -45,6 +45,10 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  google() {
+    window.location.href = 'https://localhost:7013/external-login';
+  }
+
   async onSumbit() {
     console.log(this.loginForm);
 
