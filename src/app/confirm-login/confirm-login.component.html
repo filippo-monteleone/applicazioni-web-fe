@@ -1,0 +1,10 @@
+<div class="container">
+  <h2>Referal link</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Referal</mat-label>
+      <input matInput formControlName="referal" />
+    </mat-form-field>
+    <button mat-flat-button color="primary">Next</button>
+  </form>
+</div>
