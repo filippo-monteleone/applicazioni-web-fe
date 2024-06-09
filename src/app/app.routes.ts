@@ -5,6 +5,7 @@ import { NewCarParkComponent } from './new-car-park/new-car-park.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { authGuard } from './guards/auth.guard';
+import { ConfirmLoginComponent } from './confirm-login/confirm-login.component';
 
 export const routes: Routes = [
   {
@@ -34,5 +35,9 @@ export const routes: Routes = [
     component: NewCarParkComponent,
     title: 'Add new carpark',
     canActivate: [authGuard],
+  },
+  {
+    path: 'confirm-login',
+    component: ConfirmLoginComponent,
   },
 ];

@@ -29,17 +29,22 @@ export class AuthServiceService {
     });
   }
 
-  register(username: string, password: string) {
-    this.http.post('api/register', { username, password }).subscribe((_) => {
-      this.http.get<{ username: string }>('/api/user').subscribe((user) => {
-        this.username.next(username);
-        this.user.next(user.username);
-      });
+  register(username: string, password: string, invite?: string) {
+    this.http
+      .post(invite ? `api/register?invite=${invite}` : `api/register`, {
+        username,
+        password,
+      })
+      .subscribe((_) => {
+        this.http.get<{ username: string }>('/api/user').subscribe((user) => {
+          this.username.next(username);
+          this.user.next(user.username);
+        });
 
-      const authToken = 'testoken';
-      localStorage.setItem(this.authSecretKey, authToken);
-      this.isAuthenticated = true;
-    });
+        const authToken = 'testoken';
+        localStorage.setItem(this.authSecretKey, authToken);
+        this.isAuthenticated = true;
+      });
   }
 
   isAuthenticatedUser(): boolean {
