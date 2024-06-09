@@ -1,21 +1,35 @@
-<div class="container">
-  <h2>Register</h2>
-  <button mat-raised-button class="btn-social">
-    <img src="assets/google.svg" />
-  </button>
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        placeholder="Ex. esempio@gmail.com"
-        formControlName="email"
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input matInput formControlName="password" />
-    </mat-form-field>
-    <button mat-flat-button color="primary">Register</button>
-  </form>
+<div class="map-container">
+  <div class="map-frame">
+    <mat-card class="menu-btn">
+      <mat-card-content>
+        <div class="container">
+          <h2>Register</h2>
+          <p>Please enter your details to sign in.</p>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="input-container">
+              <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  placeholder="Ex. esempio@gmail.com"
+                  formControlName="email"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" />
+              </mat-form-field>
+            </div>
+            <div class="footer">
+              <button mat-flat-button color="primary">Login</button>
+              <p>
+                don't have an account? <a routerLink="/register">Register</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div id="map"></div>
+  </div>
 </div>
