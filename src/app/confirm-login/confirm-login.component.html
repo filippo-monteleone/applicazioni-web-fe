@@ -1,10 +1,30 @@
-<div class="container">
-  <h2>Referal link</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-      <mat-label>Referal</mat-label>
-      <input matInput formControlName="referal" />
-    </mat-form-field>
-    <button mat-flat-button color="primary">Next</button>
-  </form>
+<div class="map-container">
+  <div class="map-frame">
+    <mat-card class="menu-btn">
+      <mat-card-content>
+        <div class="container">
+          <h2>Invite code</h2>
+          <p>Please enter your invite code.</p>
+          <form [formGroup]="codeForm" (ngSubmit)="onSubmit()">
+            <div class="input-container">
+              <mat-form-field>
+                <mat-label>Code</mat-label>
+                <input
+                  matInput
+                  placeholder="Ex. code123"
+                  formControlName="invite"
+                  required
+                />
+              </mat-form-field>
+            </div>
+            <div class="footer">
+              <button mat-flat-button color="primary">Next</button>
+              <p>don't have a code? <a routerLink="/">Skip</a></p>
+            </div>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div id="map"></div>
+  </div>
 </div>

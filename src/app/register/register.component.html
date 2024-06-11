@@ -3,8 +3,8 @@
     <mat-card class="menu-btn">
       <mat-card-content>
         <div class="container">
-          <h2>Register</h2>
-          <p>Please enter your details to sign in.</p>
+          <h2>Create Account</h2>
+          <p>Please enter your details to register.</p>
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="input-container">
               <mat-form-field>
@@ -13,18 +13,20 @@
                   matInput
                   placeholder="Ex. esempio@gmail.com"
                   formControlName="email"
+                  required
                 />
               </mat-form-field>
               <mat-form-field>
                 <mat-label>Password</mat-label>
-                <input matInput formControlName="password" />
+                <input matInput formControlName="password" required />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Code</mat-label>
+                <input matInput formControlName="code" />
               </mat-form-field>
             </div>
             <div class="footer">
-              <button mat-flat-button color="primary">Login</button>
-              <p>
-                don't have an account? <a routerLink="/register">Register</a>
-              </p>
+              <button mat-flat-button color="primary">Register</button>
             </div>
           </form>
         </div>

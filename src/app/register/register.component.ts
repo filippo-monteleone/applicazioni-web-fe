@@ -36,6 +36,7 @@ export class RegisterComponent {
   registerForm = new FormGroup({
     email: new FormControl<string>(''),
     password: new FormControl<string>(''),
+    code: new FormControl<string>(''),
   });
   private invite: string | undefined;
 
