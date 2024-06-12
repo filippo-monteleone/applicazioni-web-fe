@@ -10,6 +10,7 @@ export class AuthServiceService {
   private authSecretKey = 'Bearer Token';
   public user = new Subject<string>();
   public username = new ReplaySubject<string>();
+  public authenticated = new ReplaySubject<boolean>();
 
   constructor(public http: HttpClient) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
@@ -47,8 +48,20 @@ export class AuthServiceService {
       });
   }
 
-  isAuthenticatedUser(): boolean {
-    return this.isAuthenticated;
+  async isAuthenticatedUser(): Promise<boolean> {
+    // let user = await firstValueFrom(this.http.get('api/user').s);
+    // console.log(user);
+
+    try {
+      await firstValueFrom(this.http.get('api/user'));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  setAuth(val: boolean) {
+    this.isAuthenticated = val;
   }
 
   getUser() {

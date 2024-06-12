@@ -19,6 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 import { AuthServiceService } from '../auth-service.service';
 import * as L from 'leaflet';
 import { MatDividerModule } from '@angular/material/divider';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +49,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthServiceService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   private initMap(): void {
