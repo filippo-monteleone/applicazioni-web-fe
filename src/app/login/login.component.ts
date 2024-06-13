@@ -84,6 +84,7 @@ export class LoginComponent {
   }
 
   google() {
+    // this.router.navigate(['/external-login']);
     window.location.href = 'https://localhost:7013/api/external-login';
   }
 

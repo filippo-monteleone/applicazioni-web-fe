@@ -28,7 +28,9 @@ export class ConfirmLoginComponent {
     invite: new FormControl<string>(''),
   });
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this.http.get('/api/role', {}).subscribe(() => console.log('ciao'));
+  }
 
   private map: L.Map | undefined;
 
@@ -70,7 +72,7 @@ export class ConfirmLoginComponent {
     const invite = this.codeForm.get('invite')?.value;
 
     this.http
-      .post('/api/referal', {})
+      .post('/api/role', { invite })
       .subscribe(() => this.router.navigate(['']));
   }
 }
