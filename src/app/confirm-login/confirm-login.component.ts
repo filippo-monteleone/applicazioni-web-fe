@@ -29,7 +29,7 @@ export class ConfirmLoginComponent {
   });
 
   constructor(private http: HttpClient, private router: Router) {
-    this.http.get('/api/role', {}).subscribe(() => console.log('ciao'));
+    this.http.get('/api/role', {}).subscribe(() => this.router.navigate(['']));
   }
 
   private map: L.Map | undefined;

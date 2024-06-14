@@ -39,5 +39,10 @@ export const routes: Routes = [
   {
     path: 'confirm-login',
     component: ConfirmLoginComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'api/confirm-login',
+    redirectTo: 'confirm-login',
   },
 ];
