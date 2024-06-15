@@ -102,7 +102,7 @@ export class LoginComponent {
       this.authService.login(username, password);
       this.authService.user.subscribe((data) => {
         console.log(data);
-        if (data != '') this.router.navigate(['/']);
+        if (data.username != '') this.router.navigate(['/']);
       });
     }
 

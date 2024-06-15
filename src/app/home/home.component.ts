@@ -15,6 +15,7 @@ import { SharedHomeDashboardService } from '../shared-home-dashboard.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AuthServiceService } from '../auth-service.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -41,8 +42,15 @@ export class HomeComponent {
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
-    private auth: AuthServiceService
-  ) {}
+    private auth: AuthServiceService,
+    public http: HttpClient
+  ) {
+    this.http.get<string>('/api/user').subscribe((user) => {
+      this.http.get<string[]>('/api/role').subscribe((role) => {
+        this.auth.user.next({ username: user, roles: role });
+      });
+    });
+  }
 
   openSidebar(): void {
     this.opened = true;

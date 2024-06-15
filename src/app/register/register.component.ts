@@ -94,7 +94,7 @@ export class RegisterComponent {
     if (username && password) {
       this.authService.register(username, password, this.invite);
       this.authService.user.subscribe((data) => {
-        if (data != '') this.router.navigate(['/']);
+        if (data.username != '') this.router.navigate(['/']);
       });
     }
   }

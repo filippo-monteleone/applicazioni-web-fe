@@ -20,6 +20,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { Subject } from 'rxjs';
 import { PlaceCarParkComponent } from '../place-car-park/place-car-park.component';
 import { Router } from '@angular/router';
+import { AuthServiceService } from '../auth-service.service';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -62,6 +63,12 @@ export class MapComponent {
   retracted: Subject<boolean> = new Subject();
 
   hideUi: boolean = false;
+  isAdmin: boolean = false;
+
+  user: {
+    username: string;
+    roles: string[];
+  } = { username: '', roles: [] };
 
   @ViewChild(PlaceCarParkComponent) pcp!: PlaceCarParkComponent;
 
@@ -105,8 +112,14 @@ export class MapComponent {
   constructor(
     private markerService: MarkerService,
     public dialog: MatDialog,
-    private routerNav: Router
+    private routerNav: Router,
+    private auth: AuthServiceService
   ) {
+    this.auth.user.subscribe((val) => {
+      this.user = val;
+      this.isAdmin = this.checkAdmin();
+    });
+
     markerService.openedDialog$.subscribe((marker) => {
       if (this.hideUi) return;
       console.log(marker);
@@ -124,7 +137,7 @@ export class MapComponent {
             this.route?.remove();
             this.route = L.Routing.control({
               router: L.Routing.osrmv1({
-                serviceUrl: `http://router.project-osrm.org/route/v1/`,
+                serviceUrl: `https://router.project-osrm.org/route/v1/`,
               }),
               waypoints: [this.firstWaypoint, this.myPosition],
             }).addTo(this.map);
@@ -149,6 +162,12 @@ export class MapComponent {
 
   leftParking() {
     this.route?.remove();
+  }
+
+  checkAdmin() {
+    this.isAdmin = this.user.roles.find((val) => val == 'admin') != undefined;
+    console.log(this.isAdmin);
+    return this.isAdmin;
   }
 
   placeMarkerMode() {
