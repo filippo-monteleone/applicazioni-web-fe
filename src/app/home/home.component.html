@@ -9,7 +9,7 @@
         </button>
       </mat-toolbar-row>
       <mat-toolbar-row>
-        <a href="dashboard" mat-button>
+        <a href="dashboard" mat-button [hidden]="!isAdmin">
           <mat-icon>manage_accounts</mat-icon>
           <span>Dashboard</span>
         </a>

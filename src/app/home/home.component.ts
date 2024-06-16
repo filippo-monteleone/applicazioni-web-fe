@@ -38,6 +38,7 @@ import { HttpClient } from '@angular/common/http';
 export class HomeComponent {
   opened: boolean = false;
   username: string = '';
+  isAdmin: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -48,6 +49,14 @@ export class HomeComponent {
     this.http.get<string>('/api/user').subscribe((user) => {
       this.http.get<string[]>('/api/role').subscribe((role) => {
         this.auth.user.next({ username: user, roles: role });
+        console.log(
+          role,
+          role.find((val) => val == 'admin'),
+          this.isAdmin
+        );
+        if (role.find((val) => val == 'admin')) {
+          this.isAdmin = true;
+        }
       });
     });
   }
