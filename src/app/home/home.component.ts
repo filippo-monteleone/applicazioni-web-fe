@@ -65,6 +65,10 @@ export class HomeComponent {
     this.opened = true;
   }
 
+  exit(): void {
+    this.http.get('api/logout').subscribe((_) => {});
+  }
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => console.log(params));
     this.auth.username.subscribe((val) => (this.username = val));
