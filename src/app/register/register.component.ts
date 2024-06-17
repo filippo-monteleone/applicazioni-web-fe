@@ -89,10 +89,13 @@ export class RegisterComponent {
   async onSubmit() {
     const username = this.registerForm.get('email')?.value;
     const password = this.registerForm.get('password')?.value;
-    console.log(username, password);
+    let invite = this.registerForm.get('code')?.value;
+    console.log(username, password, invite);
+
+    if (invite == null) invite = undefined;
 
     if (username && password) {
-      this.authService.register(username, password, this.invite);
+      this.authService.register(username, password, invite);
       this.authService.user.subscribe((data) => {
         if (data.username != '') this.router.navigate(['/']);
       });

@@ -4,11 +4,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { Location } from '@angular/common';
+import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-new-car-park',
   standalone: true,
-  imports: [MatButtonModule, MatInputModule, MatIcon],
+  imports: [MatButtonModule, MatInputModule, MatIcon, ReactiveFormsModule],
   templateUrl: './new-car-park.component.html',
   styleUrl: './new-car-park.component.css',
 })
@@ -16,11 +18,38 @@ export class NewCarParkComponent {
   lat: number = 0;
   lng: number = 0;
 
-  constructor(private route: ActivatedRoute, private _location: Location) {
+  constructor(
+    private route: ActivatedRoute,
+    private _location: Location,
+    public http: HttpClient
+  ) {
     this.route.queryParams.subscribe((params) => {
       this.lat = Number(params['lat']);
       this.lng = Number(params['lng']);
     });
+  }
+
+  parkForm = new FormGroup({
+    name: new FormControl<string>(''),
+    parkRate: new FormControl<string>(''),
+    chargeRate: new FormControl<string>(''),
+  });
+
+  onSubmit() {
+    const name = this.parkForm.get('name')?.value;
+    const parkRate = this.parkForm.get('parkRate')?.value;
+    const chargeRate = this.parkForm.get('chargeRate')?.value;
+    console.log(name, parkRate, chargeRate, this.lat, this.lng);
+
+    this.http
+      .post('/api/car-park', {
+        name,
+        parkRate,
+        chargeRate,
+        lat: this.lat.toString(),
+        lng: this.lng.toString(),
+      })
+      .subscribe((_) => {});
   }
 
   ngOnInit() {

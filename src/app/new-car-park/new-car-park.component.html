@@ -4,21 +4,35 @@
     <h2>Back</h2>
   </span>
   <h2>Create a new car park</h2>
-  <form>
+  <form [formGroup]="parkForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Name</mat-label>
-      <input matInput placeholder="Ex. Vigevano Car Park" />
+      <input
+        matInput
+        placeholder="Ex. Vigevano Car Park"
+        formControlName="name"
+      />
     </mat-form-field>
     <div class="price-container">
       <mat-form-field>
         <mat-label>Park rate</mat-label>
-        <input matInput placeholder="Ex. 3,0 h/€" />
+        <input
+          matInput
+          placeholder="Ex. 3,0 h/€"
+          formControlName="parkRate"
+          type="number"
+        />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Charge rate</mat-label>
-        <input matInput placeholder="Ex. 0,5 KW/€" />
+        <input
+          matInput
+          placeholder="Ex. 0,5 KW/€"
+          formControlName="chargeRate"
+          type="number"
+        />
       </mat-form-field>
     </div>
+    <button mat-flat-button color="primary">Create</button>
   </form>
-  <button mat-flat-button color="primary">Create</button>
 </div>
