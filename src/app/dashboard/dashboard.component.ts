@@ -7,12 +7,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { Location } from '@angular/common';
+import { CommonModule, Location, NgFor } from '@angular/common';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedHomeDashboardService } from '../shared-home-dashboard.service';
 import { NavigationExtras, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 const PARK_DATA: ParkSpot[] = [
   { position: 1, name: 'Hydrogen', free: true },
@@ -38,6 +39,13 @@ export interface Payment {
   cost: number;
 }
 
+export interface CarPark {
+  id: number;
+  name: string;
+  parkRate: number;
+  chargeRate: number;
+}
+
 export interface ParkSpot {
   name: string;
   position: number;
@@ -59,6 +67,8 @@ export interface ParkSpot {
     MatPaginatorModule,
     MatCheckboxModule,
     MatButtonModule,
+    NgFor,
+    CommonModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -69,12 +79,28 @@ export class DashboardComponent {
   parkSource = PARK_DATA;
   paymentSource = PAY_DATA;
 
+  carParks: CarPark[] | undefined;
+
   displayedColumns: string[] = ['position', 'name'];
   paymentDisplayedColumns: string[] = ['Paid for', 'Username', 'Type', 'Cost'];
 
   hidePageSize: boolean = true;
 
-  constructor(private _location: Location, private router: Router) {}
+  constructor(
+    private _location: Location,
+    private router: Router,
+    public http: HttpClient
+  ) {
+    this.http.get<string[]>('api/role').subscribe((val) => {
+      if (val.find((x) => x == 'admin') == undefined) {
+        this.router.navigate(['/']);
+      }
+    });
+
+    this.http
+      .get<CarPark[]>('/api/car-park')
+      .subscribe((_) => (this.carParks = _));
+  }
 
   ngOnInit() {
     this.selectedVal = 'carparks';
@@ -87,6 +113,17 @@ export class DashboardComponent {
 
   handlePageEvent(e: PageEvent) {
     console.log(e);
+  }
+
+  delete(i: number) {
+    if (this.carParks) {
+      this.http
+        .delete(`/api/car-park/${this.carParks?.at(i)?.id}`)
+        .subscribe((_) => {
+          if (this.carParks) this.carParks.splice(i, 1);
+        });
+    }
+    console.log('ciao');
   }
 
   back() {
