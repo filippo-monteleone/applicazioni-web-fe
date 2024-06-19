@@ -78,6 +78,7 @@ export class DashboardComponent {
   price: number | undefined;
   parkSource = PARK_DATA;
   paymentSource = PAY_DATA;
+  length: number = 0;
 
   carParks: CarPark[] | undefined;
 
@@ -102,6 +103,17 @@ export class DashboardComponent {
       .subscribe((_) => (this.carParks = _));
   }
 
+  onAccOpen(i: number) {
+    console.log(i);
+    this.http
+      .get<{ length: number }>(
+        `/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`
+      )
+      .subscribe((_) => {
+        this.length = _.length;
+      });
+  }
+
   ngOnInit() {
     this.selectedVal = 'carparks';
     this.price = 5;
@@ -111,8 +123,19 @@ export class DashboardComponent {
     this.selectedVal = val;
   }
 
-  handlePageEvent(e: PageEvent) {
-    console.log(e);
+  handlePageEvent(e: PageEvent, i: number) {
+    console.log(i);
+    // this.http
+    // .get(`/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`)
+    // .subscribe();
+    this.http
+      .get<{ length: number }>(
+        `/api/car-park/${i}/car-spots?page=${e.pageIndex + 1}&resultsPerPage=10`
+      )
+      .subscribe((_) => {
+        this.length = _.length;
+      });
+    console.log(e, 'negro');
   }
 
   delete(i: number) {

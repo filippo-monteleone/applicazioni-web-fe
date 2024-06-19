@@ -16,7 +16,7 @@
   @if(selectedVal == "carparks") {
   <ul style="list-style-type: none">
     <li *ngFor="let carPark of carParks; let i = index">
-      <mat-expansion-panel>
+      <mat-expansion-panel (opened)="onAccOpen(carPark.id)">
         <mat-expansion-panel-header>
           <mat-panel-title>{{ carPark.name }}</mat-panel-title>
         </mat-expansion-panel-header>
@@ -67,9 +67,9 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
         <mat-paginator
-          (page)="handlePageEvent($event)"
+          (page)="handlePageEvent($event, carPark.id)"
           hidePageSize="true"
-          length="53"
+          [length]="length"
           pageSize="10"
         ></mat-paginator>
 
@@ -143,7 +143,7 @@
     <tr mat-row *matRowDef="let row; columns: paymentDisplayedColumns"></tr>
   </table>
   <mat-paginator
-    (page)="handlePageEvent($event)"
+    (page)="handlePageEvent($event, 1)"
     hidePageSize="true"
     length="53"
     pageSize="10"

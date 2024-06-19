@@ -16,9 +16,7 @@ export class PlaceCarParkComponent {
   init: boolean = false;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  constructor() {
-    setInterval(() => console.log(this.expand));
-  }
+  constructor() {}
 
   close() {
     this.expand = false;

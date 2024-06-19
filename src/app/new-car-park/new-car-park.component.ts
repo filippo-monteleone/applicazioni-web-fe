@@ -31,12 +31,14 @@ export class NewCarParkComponent {
 
   parkForm = new FormGroup({
     name: new FormControl<string>(''),
+    parkSpots: new FormControl<string>(''),
     parkRate: new FormControl<string>(''),
     chargeRate: new FormControl<string>(''),
   });
 
   onSubmit() {
     const name = this.parkForm.get('name')?.value;
+    const carSpots = this.parkForm.get('parkSpots')?.value;
     const parkRate = this.parkForm.get('parkRate')?.value;
     const chargeRate = this.parkForm.get('chargeRate')?.value;
     console.log(name, parkRate, chargeRate, this.lat, this.lng);
@@ -44,6 +46,7 @@ export class NewCarParkComponent {
     this.http
       .post('/api/car-park', {
         name,
+        carSpots,
         parkRate,
         chargeRate,
         lat: this.lat.toString(),
