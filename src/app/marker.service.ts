@@ -22,13 +22,13 @@ export class MarkerService {
   }
 
   makeParkingMarkers(map: L.Map | undefined): void {
-    this.http.get(this.capitals).subscribe((res: any) => {
-      for (const c of res.features) {
-        const lon = c.geometry.coordinates[0];
-        const lat = c.geometry.coordinates[1];
-        const marker = L.marker([lat, lon]);
+    // this.http.get(this.capitals).subscribe((res: any) => {
 
-        const id = c.properties.state;
+    this.http.get('/api/car-park').subscribe((res: any) => {
+      for (const c of res) {
+        const lon = c.long;
+        const lat = c.lat;
+        const marker = L.marker([lat, lon]);
 
         marker.addEventListener('click', (e) => {
           this.openDialogSource.next(e);
@@ -36,6 +36,21 @@ export class MarkerService {
 
         if (map) marker.addTo(map);
       }
+
+      // console.log(res);
+      // for (const c of res.features) {
+      //   const lon = c.geometry.coordinates[0];
+      //   const lat = c.geometry.coordinates[1];
+      //   const marker = L.marker([lat, lon]);
+
+      //   const id = c.properties.state;
+
+      //   marker.addEventListener('click', (e) => {
+      //     this.openDialogSource.next(e);
+      //   });
+
+      //   if (map) marker.addTo(map);
+      // }
     });
   }
 }

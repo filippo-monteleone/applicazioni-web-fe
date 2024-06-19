@@ -98,7 +98,7 @@ export class DashboardComponent {
     });
 
     this.http
-      .get<CarPark[]>('/api/car-park')
+      .get<CarPark[]>('/api/car-park?me=true')
       .subscribe((_) => (this.carParks = _));
   }
 
@@ -123,7 +123,6 @@ export class DashboardComponent {
           if (this.carParks) this.carParks.splice(i, 1);
         });
     }
-    console.log('ciao');
   }
 
   back() {
