@@ -126,8 +126,18 @@ export class MapComponent {
 
       this.firstWaypoint = new L.LatLng(marker.latlng.lat, marker.latlng.lng);
 
+      let info: {
+        id: number;
+        name: string;
+        parkRate: number;
+        chargeRate: number;
+        queue: number;
+      } = marker.target.options;
+
+      console.log(info);
+
       let mydialog = this.dialog.open(DialogComponent, {
-        data: { type: 'buy' },
+        data: { type: 'buy', info },
         width: 'auto',
       });
 

@@ -28,7 +28,7 @@ export class MarkerService {
       for (const c of res) {
         const lon = c.long;
         const lat = c.lat;
-        const marker = L.marker([lat, lon]);
+        const marker = L.marker([lat, lon], c);
 
         marker.addEventListener('click', (e) => {
           this.openDialogSource.next(e);

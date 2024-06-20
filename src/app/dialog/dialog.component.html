@@ -1,16 +1,19 @@
 @if (data.type == 'buy') { @if (phase == 1) {
 <div class="buy-container">
-  <h1>Charge your car</h1>
+  <h1>
+    Charge your car at <b>{{ data.info.name }}</b>
+  </h1>
   <p>
     Need to charge your car? Simple! Bring the slider value to the desired
     percentage.
   </p>
 </div>
-<mat-slider min="20" max="100" discrete [displayWith]="formatLabel">
-  <input value="30" matSliderThumb #value />
+<mat-slider min="0" max="100" step="1" discrete [displayWith]="formatLabel">
+  <input value="15" matSliderStartThumb #valueStart />
+  <input value="30" matSliderEndThumb #valueEnd />
 </mat-slider>
 <h4 class="cost">
-  Cost: <b>{{ calculateCost(value.value) }}</b>
+  Cost: <b>{{ calculateCost(valueStart.value, valueEnd.value) }}</b>
 </h4>
 <button mat-button class="btn-next" (click)="nextPhase()">Next</button>
 } @else if(phase == 2) {

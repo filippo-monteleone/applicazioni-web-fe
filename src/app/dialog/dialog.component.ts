@@ -46,12 +46,25 @@ export class DialogComponent {
   energyCost: number;
   phase: number;
 
-  data: { type: string } = inject(MAT_DIALOG_DATA) ?? { type: '' };
+  data: {
+    type: string;
+    info: {
+      id: number;
+      name: string;
+      parkRate: number;
+      chargeRate: number;
+      queue: number;
+    };
+  } = inject(MAT_DIALOG_DATA) ?? { type: '' };
 
   constructor(public dialogRef: MatDialogRef<DialogComponent>) {
     this.phase = 1;
     this.energyCost = 0.2;
     this.subscription = false;
+  }
+
+  ngOnInit() {
+    console.log(this.data);
   }
 
   nextPhase() {
@@ -63,7 +76,15 @@ export class DialogComponent {
     return `${value}%`;
   }
 
-  calculateCost(value: string): string {
-    return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
+  calculateCost(
+    valueStart: string,
+    valueEnd: string,
+    batterySize = 10
+  ): string {
+    const batteryToCharge =
+      (batterySize / 100) * (Number(valueEnd) - Number(valueStart));
+    const costOfCharge = this.data.info.chargeRate * batteryToCharge * 100;
+    return `${Math.trunc(costOfCharge)}`;
+    // return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
   }
 }
