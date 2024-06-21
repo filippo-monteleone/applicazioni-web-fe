@@ -1,5 +1,13 @@
 import { Component, Inject, inject } from '@angular/core';
 import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+
+import {
   MatDialogActions,
   MatDialogClose,
   MatDialogTitle,
@@ -17,7 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dialog',
@@ -37,6 +45,8 @@ import { Observable, of } from 'rxjs';
     MatSelectModule,
     MatChipsModule,
     MatSliderModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.css',
@@ -45,6 +55,7 @@ export class DialogComponent {
   subscription: boolean;
   energyCost: number;
   phase: number;
+  isChecked: boolean = false;
 
   data: {
     type: string;
@@ -57,7 +68,10 @@ export class DialogComponent {
     };
   } = inject(MAT_DIALOG_DATA) ?? { type: '' };
 
-  constructor(public dialogRef: MatDialogRef<DialogComponent>) {
+  constructor(
+    public dialogRef: MatDialogRef<DialogComponent>,
+    private http: HttpClient
+  ) {
     this.phase = 1;
     this.energyCost = 0.2;
     this.subscription = false;
@@ -86,5 +100,15 @@ export class DialogComponent {
     const costOfCharge = this.data.info.chargeRate * batteryToCharge * 100;
     return `${Math.trunc(costOfCharge)}`;
     // return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
+  }
+
+  save(balance: string, battery: string) {
+    this.http
+      .put('api/user', {
+        balance: Number(balance),
+        battery: Number(battery),
+        pro: this.isChecked,
+      })
+      .subscribe((_) => console.log(_));
   }
 }
