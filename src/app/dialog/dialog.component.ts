@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { HttpClient } from '@angular/common/http';
+import { AuthServiceService } from '../auth-service.service';
 
 @Component({
   selector: 'app-dialog',
@@ -70,7 +71,8 @@ export class DialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
-    private http: HttpClient
+    private http: HttpClient,
+    private auth: AuthServiceService
   ) {
     this.phase = 1;
     this.energyCost = 0.2;
@@ -110,5 +112,19 @@ export class DialogComponent {
         pro: this.isChecked,
       })
       .subscribe((_) => console.log(_));
+
+    this.http
+      .get<{
+        balance: number;
+        battery: number;
+        pro: boolean;
+        username: string;
+      }>('/api/user')
+      .subscribe((user) => {
+        console.log(user);
+        this.http.get<string[]>('/api/role').subscribe((role) => {
+          this.auth.user.next({ ...user, roles: role });
+        });
+      });
   }
 }

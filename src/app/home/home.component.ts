@@ -46,19 +46,27 @@ export class HomeComponent {
     private auth: AuthServiceService,
     public http: HttpClient
   ) {
-    this.http.get<string>('/api/user').subscribe((user) => {
-      this.http.get<string[]>('/api/role').subscribe((role) => {
-        this.auth.user.next({ username: user, roles: role });
-        console.log(
-          role,
-          role.find((val) => val == 'admin'),
-          this.isAdmin
-        );
-        if (role.find((val) => val == 'admin')) {
-          this.isAdmin = true;
-        }
+    this.http
+      .get<{
+        balance: number;
+        battery: number;
+        pro: boolean;
+        username: string;
+      }>('/api/user')
+      .subscribe((user) => {
+        console.log(user);
+        this.http.get<string[]>('/api/role').subscribe((role) => {
+          this.auth.user.next({ ...user, roles: role });
+          console.log(
+            role,
+            role.find((val) => val == 'admin'),
+            this.isAdmin
+          );
+          if (role.find((val) => val == 'admin')) {
+            this.isAdmin = true;
+          }
+        });
       });
-    });
   }
 
   openSidebar(): void {

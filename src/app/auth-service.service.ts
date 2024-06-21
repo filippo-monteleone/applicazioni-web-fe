@@ -8,21 +8,31 @@ import { ReplaySubject, Subject, firstValueFrom } from 'rxjs';
 export class AuthServiceService {
   private isAuthenticated = false;
   private authSecretKey = 'Bearer Token';
-  public user = new Subject<{ username: string; roles: string[] }>();
+  public user = new Subject<{
+    username: string;
+    roles: string[];
+    balance?: number;
+  }>();
   public username = new ReplaySubject<string>();
   public authenticated = new ReplaySubject<boolean>();
 
   constructor(public http: HttpClient) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
-    this.user.next({ username: '', roles: [] });
+    this.user.next({ username: '', roles: [], balance: 0 });
   }
 
   login(username: string, password: string) {
     this.http.post('api/login', { username, password }).subscribe(() => {
-      this.http.get<{ username: string }>('/api/user').subscribe((user) => {
-        this.username.next(username);
-        this.user.next({ username: user.username, roles: [] });
-      });
+      this.http
+        .get<{ username: string; balance: number }>('/api/user')
+        .subscribe((user) => {
+          this.username.next(username);
+          this.user.next({
+            username: user.username,
+            roles: [],
+            balance: user.balance,
+          });
+        });
 
       const authToken = 'testoken';
       localStorage.setItem(this.authSecretKey, authToken);
@@ -39,7 +49,7 @@ export class AuthServiceService {
       .subscribe((_) => {
         this.http.get<{ username: string }>('/api/user').subscribe((user) => {
           this.username.next(username);
-          this.user.next({ username: user.username, roles: [] });
+          this.user.next({ username: user.username, roles: [], balance: 0 });
         });
 
         const authToken = 'testoken';

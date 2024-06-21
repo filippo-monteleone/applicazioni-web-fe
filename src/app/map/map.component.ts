@@ -68,6 +68,9 @@ export class MapComponent {
   user: {
     username: string;
     roles: string[];
+    balance?: number;
+    pro?: boolean;
+    battery?: number;
   } = { username: '', roles: [] };
 
   @ViewChild(PlaceCarParkComponent) pcp!: PlaceCarParkComponent;
@@ -116,6 +119,7 @@ export class MapComponent {
     private auth: AuthServiceService
   ) {
     this.auth.user.subscribe((val) => {
+      console.log(val);
       this.user = val;
       this.isAdmin = this.checkAdmin();
     });
