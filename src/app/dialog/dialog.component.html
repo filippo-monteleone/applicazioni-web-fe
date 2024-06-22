@@ -13,7 +13,7 @@
   <input value="30" matSliderEndThumb #valueEnd />
 </mat-slider>
 <h4 class="cost">
-  Cost: <b>{{ calculateCost(valueStart.value, valueEnd.value) }}</b>
+  Cost: <b>{{ calculate(valueStart.value, valueEnd.value).cost }}</b>
 </h4>
 <button mat-button class="btn-next" (click)="nextPhase()">Next</button>
 } @else if(phase == 2) {
@@ -26,7 +26,10 @@
 </div>
 <div class="estimeted-time">
   <p>Your estimated wait is</p>
-  <h1><b>3 hrs 20 mins</b></h1>
+  <!-- <h1><b>3 hrs 20 mins</b></h1> -->
+  <h1>
+    <b>{{ time }}</b>
+  </h1>
 </div>
 <div class="waiting-cars">
   <mat-icon>directions_car</mat-icon>

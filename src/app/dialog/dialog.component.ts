@@ -6,7 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-
+import dayjs from 'dayjs';
 import {
   MatDialogActions,
   MatDialogClose,
@@ -57,6 +57,8 @@ export class DialogComponent {
   energyCost: number;
   phase: number;
   isChecked: boolean = false;
+  cost: string = '0';
+  time: string = '0';
 
   data: {
     type: string;
@@ -92,6 +94,13 @@ export class DialogComponent {
     return `${value}%`;
   }
 
+  calculate(valueStart: string, valueEnd: string, batterySize = 10, power = 5) {
+    this.cost = this.calculateCost(valueStart, valueEnd, batterySize);
+    this.time = this.calcualteTime(valueStart, valueEnd, batterySize, power);
+
+    return { cost: this.cost, time: this.time };
+  }
+
   calculateCost(
     valueStart: string,
     valueEnd: string,
@@ -102,6 +111,29 @@ export class DialogComponent {
     const costOfCharge = this.data.info.chargeRate * batteryToCharge * 100;
     return `${Math.trunc(costOfCharge)}`;
     // return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
+  }
+
+  calcualteTime(
+    valueStart: string,
+    valueEnd: string,
+    batterySize = 10,
+    power = 5
+  ) {
+    const batteryToCharge =
+      (batterySize / 100) * (Number(valueEnd) - Number(valueStart));
+
+    const time = batteryToCharge / power;
+
+    let minutes = time % 1;
+
+    console.log(
+      batteryToCharge,
+      power,
+      Math.trunc(time),
+      Math.trunc(minutes * 60)
+    );
+
+    return `${Math.trunc(time)} hrs ${Math.trunc(minutes * 60)} mins`;
   }
 
   save(balance: string, battery: string) {
