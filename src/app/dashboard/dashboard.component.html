@@ -145,7 +145,7 @@
   <mat-paginator
     (page)="handlePageEvent($event, 1)"
     hidePageSize="true"
-    length="53"
+    [length]="length"
     pageSize="10"
   ></mat-paginator>
   }

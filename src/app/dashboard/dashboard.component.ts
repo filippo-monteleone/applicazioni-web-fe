@@ -121,21 +121,38 @@ export class DashboardComponent {
   public onValChange(val: string) {
     console.log(this.selectedVal);
     this.selectedVal = val;
+    if (this.selectedVal == 'stats')
+      this.http
+        .get<{ length: number }>(`/api/payments?page=1&resultsPerPage=10`)
+        .subscribe((_) => {
+          this.length = _.length;
+        });
   }
 
   handlePageEvent(e: PageEvent, i: number) {
-    console.log(i);
+    console.log(this.selectedVal);
     // this.http
     // .get(`/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`)
     // .subscribe();
-    this.http
-      .get<{ length: number }>(
-        `/api/car-park/${i}/car-spots?page=${e.pageIndex + 1}&resultsPerPage=10`
-      )
-      .subscribe((_) => {
-        this.length = _.length;
-      });
-    console.log(e, 'negro');
+    if (this.selectedVal == 'carparks') {
+      this.http
+        .get<{ length: number }>(
+          `/api/car-park/${i}/car-spots?page=${
+            e.pageIndex + 1
+          }&resultsPerPage=10`
+        )
+        .subscribe((_) => {
+          this.length = _.length;
+        });
+    } else {
+      this.http
+        .get<{ length: number }>(
+          `/api/payments?page=${e.pageIndex + 1}&resultsPerPage=10`
+        )
+        .subscribe((_) => {
+          this.length = _.length;
+        });
+    }
   }
 
   delete(i: number) {
