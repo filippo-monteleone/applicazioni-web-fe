@@ -59,6 +59,8 @@ export class DialogComponent {
   isChecked: boolean = false;
   cost: string = '0';
   time: string = '0';
+  currentCharge: number = 0;
+  targetCharge: number = 0;
 
   data: {
     type: string;
@@ -87,16 +89,32 @@ export class DialogComponent {
 
   nextPhase() {
     this.phase++;
-    if (this.phase == 3) this.dialogRef.close(true);
+    if (this.phase == 3) {
+      this.http
+        .post(`/api/car-park/${this.data.info.id}/park`, {
+          currentCharge: this.currentCharge,
+          targetCharge: this.targetCharge,
+        })
+        .subscribe((_) => console.log(_));
+      this.dialogRef.close(true);
+    }
   }
 
   formatLabel(value: number): string {
     return `${value}%`;
   }
 
-  calculate(valueStart: string, valueEnd: string, batterySize = 10, power = 5) {
+  calculate(
+    valueStart: string,
+    valueEnd: string,
+    batterySize = 10,
+    power = 10
+  ) {
     this.cost = this.calculateCost(valueStart, valueEnd, batterySize);
     this.time = this.calcualteTime(valueStart, valueEnd, batterySize, power);
+
+    this.currentCharge = Number(valueStart);
+    this.targetCharge = Number(valueEnd);
 
     return { cost: this.cost, time: this.time };
   }
@@ -117,7 +135,7 @@ export class DialogComponent {
     valueStart: string,
     valueEnd: string,
     batterySize = 10,
-    power = 5
+    power = 10
   ) {
     const batteryToCharge =
       (batterySize / 100) * (Number(valueEnd) - Number(valueStart));

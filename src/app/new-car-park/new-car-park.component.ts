@@ -34,6 +34,7 @@ export class NewCarParkComponent {
     parkSpots: new FormControl<string>(''),
     parkRate: new FormControl<string>(''),
     chargeRate: new FormControl<string>(''),
+    power: new FormControl<string>(''),
   });
 
   onSubmit() {
@@ -41,7 +42,8 @@ export class NewCarParkComponent {
     const carSpots = this.parkForm.get('parkSpots')?.value;
     const parkRate = this.parkForm.get('parkRate')?.value;
     const chargeRate = this.parkForm.get('chargeRate')?.value;
-    console.log(name, parkRate, chargeRate, this.lat, this.lng);
+    const power = this.parkForm.get('power')?.value;
+    console.log(name, parkRate, chargeRate, this.lat, this.lng, power);
 
     this.http
       .post('/api/car-park', {
@@ -51,6 +53,7 @@ export class NewCarParkComponent {
         chargeRate,
         lat: this.lat.toString(),
         lng: this.lng.toString(),
+        power,
       })
       .subscribe((_) => {});
   }
