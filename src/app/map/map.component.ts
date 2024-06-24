@@ -59,7 +59,12 @@ export class MapComponent {
   myPosition: L.LatLng | undefined;
   route: L.Routing.Control | undefined;
 
-  changingValue: Subject<boolean> = new Subject();
+  changingValue: Subject<{
+    id: number;
+    currentCharge: number;
+    targetCharge: number;
+    time: number;
+  }> = new Subject();
   retracted: Subject<boolean> = new Subject();
 
   hideUi: boolean = false;
@@ -146,6 +151,7 @@ export class MapComponent {
       });
 
       mydialog.afterClosed().subscribe((result) => {
+        console.log('qua', result);
         if (result) {
           if (this.map && this.firstWaypoint && this.myPosition) {
             this.route?.remove();
@@ -156,7 +162,7 @@ export class MapComponent {
               waypoints: [this.firstWaypoint, this.myPosition],
             }).addTo(this.map);
           }
-          if (!this.hideUi) this.changingValue.next(true);
+          if (!this.hideUi) this.changingValue.next(result);
         }
       });
     });

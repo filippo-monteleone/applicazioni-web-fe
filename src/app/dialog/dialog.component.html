@@ -15,21 +15,43 @@
 <h4 class="cost">
   Cost: <b>{{ calculate(valueStart.value, valueEnd.value).cost }}</b>
 </h4>
+<div class="estimeted-time">
+  <p>Your estimated recharge time is</p>
+  <!-- <h1><b>3 hrs 20 mins</b></h1> -->
+  <h1>
+    <b>{{ time }}</b>
+  </h1>
+</div>
 <button mat-button class="btn-next" (click)="nextPhase()">Next</button>
 } @else if(phase == 2) {
+<div class="buy-container">
+  <h1>
+    Park at <b>{{ data.info.name }}</b>
+  </h1>
+  <p>
+    Need to park longer? No problem! Just enter the number of hours and minutes
+    you want to stay.
+  </p>
+</div>
+<div class="added-time">
+  <mat-form-field>
+    <mat-label>Hours</mat-label>
+    <input matInput type="number" min="0" [(ngModel)]="hrs" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Minutes</mat-label>
+    <input matInput type="number" min="0" max="59" [(ngModel)]="mins" />
+  </mat-form-field>
+</div>
+<button mat-button class="btn-next" (click)="nextPhase()">Next</button>
+
+} @else if (phase == 3) {
 <div class="buy-container">
   <h1>Booking Details</h1>
   <p>
     Ready to start your recharge? Press 'Accept' and follow the directions to
     the parking lot. Have a safe journey!
   </p>
-</div>
-<div class="estimeted-time">
-  <p>Your estimated wait is</p>
-  <!-- <h1><b>3 hrs 20 mins</b></h1> -->
-  <h1>
-    <b>{{ time }}</b>
-  </h1>
 </div>
 <div class="waiting-cars">
   <mat-icon>directions_car</mat-icon>
@@ -41,7 +63,6 @@
     Accept
   </button>
 </mat-dialog-actions>
-
 } } @else {
 <h2 mat-dialog-title>My Profile</h2>
 <mat-dialog-content>

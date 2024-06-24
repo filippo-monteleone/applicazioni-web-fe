@@ -61,6 +61,9 @@ export class DialogComponent {
   time: string = '0';
   currentCharge: number = 0;
   targetCharge: number = 0;
+  mins: number = 0;
+  hrs: number = 0;
+  realtime: number = 0;
 
   data: {
     type: string;
@@ -89,14 +92,23 @@ export class DialogComponent {
 
   nextPhase() {
     this.phase++;
-    if (this.phase == 3) {
-      this.http
-        .post(`/api/car-park/${this.data.info.id}/park`, {
-          currentCharge: this.currentCharge,
-          targetCharge: this.targetCharge,
-        })
-        .subscribe((_) => console.log(_));
-      this.dialogRef.close(true);
+
+    if (this.phase == 3) this.realtime += this.hrs + this.mins / 60;
+
+    if (this.phase == 4) {
+      // this.http
+      //   .post(`/api/car-park/${this.data.info.id}/park`, {
+      //     currentCharge: this.currentCharge,
+      //     targetCharge: this.targetCharge,
+      //     time: this.realtime,
+      //   })
+      //   .subscribe((_) => console.log(_));
+      this.dialogRef.close({
+        id: this.data.info.id,
+        currentCharge: this.currentCharge,
+        targetCharge: this.targetCharge,
+        time: this.realtime,
+      });
     }
   }
 
@@ -143,6 +155,8 @@ export class DialogComponent {
     const time = batteryToCharge / power;
 
     let minutes = time % 1;
+
+    this.realtime = time;
 
     console.log(
       batteryToCharge,

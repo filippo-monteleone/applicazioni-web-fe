@@ -51,6 +51,13 @@
   justify-content: center;
 }
 
+.added-time {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
 .waiting-cars {
   display: flex;
   justify-content: center;

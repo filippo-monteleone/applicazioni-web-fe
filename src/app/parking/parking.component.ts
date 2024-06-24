@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { Subject, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-parking',
@@ -18,10 +19,24 @@ export class ParkingComponent {
   shouldRetract: boolean = false;
   expand: boolean = false;
   init: boolean = false;
-  @Input() shouldExpand: Subject<boolean> = new Subject();
+  inTraffic: boolean = true;
+  info:
+    | {
+        id: number;
+        currentCharge: number;
+        targetCharge: number;
+        time: number;
+      }
+    | undefined;
+  @Input() shouldExpand: Subject<{
+    id: number;
+    currentCharge: number;
+    targetCharge: number;
+    time: number;
+  }> = new Subject();
   @Output() shouldRetractSub: EventEmitter<boolean> = new EventEmitter();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     setInterval(() => {
       // console.log(this.shouldRetract);
       // this.shouldExpand = !this.shouldExpand;
@@ -34,6 +49,7 @@ export class ParkingComponent {
       this.expand = true;
       this.init = true;
       console.log('value is changing', v);
+      this.info = v;
     });
   }
 
@@ -41,5 +57,12 @@ export class ParkingComponent {
     this.expand = false;
     this.shouldRetractSub.emit(true);
     // this.shouldRetract = true;
+  }
+
+  checkIn() {
+    this.http
+      .post(`/api/car-park/${this.info?.id}/park`, this.info)
+      .subscribe((_) => (this.inTraffic = false));
+    console.log(this.info);
   }
 }

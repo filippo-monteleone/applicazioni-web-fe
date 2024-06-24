@@ -26,22 +26,24 @@
       </mat-card-content>
     </div>
     <div class="info">
-      @if (arrived) {
+      @if (arrived && !inTraffic) {
       <h1><b>22%</b></h1>
       <span class="sub-text">Charging...</span>
-      } @else {
+      } @else if (!inTraffic) {
       <h1><b>20</b></h1>
       <span class="sub-text">Cars in front</span>
       }
     </div>
   </div>
   <mat-card-actions>
-    @if (arrived) {
+    @if (arrived && !inTraffic) {
     <button mat-flat-button color="warn" (click)="retract()">
       Leave and pay {{ price }}€
     </button>
-    } @else {
+    } @else if (!inTraffic) {
     <button mat-flat-button color="warn">Leave</button>
+    } @else {
+    <button mat-flat-button (click)="checkIn()">Check In</button>
     }
   </mat-card-actions>
 </mat-card>
