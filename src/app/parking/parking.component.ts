@@ -26,6 +26,7 @@ export class ParkingComponent {
         currentCharge: number;
         targetCharge: number;
         time: number;
+        skip?: boolean;
       }
     | undefined;
   @Input() shouldExpand: Subject<{
@@ -33,6 +34,7 @@ export class ParkingComponent {
     currentCharge: number;
     targetCharge: number;
     time: number;
+    skip?: boolean;
   }> = new Subject();
   @Output() shouldRetractSub: EventEmitter<boolean> = new EventEmitter();
 
@@ -48,6 +50,10 @@ export class ParkingComponent {
     this.shouldExpand.subscribe((v) => {
       this.expand = true;
       this.init = true;
+      if (v.skip) {
+        this.inTraffic = false;
+        this.arrived = true;
+      }
       console.log('value is changing', v);
       this.info = v;
     });

@@ -21,6 +21,7 @@ import { Subject } from 'rxjs';
 import { PlaceCarParkComponent } from '../place-car-park/place-car-park.component';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../auth-service.service';
+import { HttpClient } from '@angular/common/http';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -64,6 +65,7 @@ export class MapComponent {
     currentCharge: number;
     targetCharge: number;
     time: number;
+    skip?: boolean;
   }> = new Subject();
   retracted: Subject<boolean> = new Subject();
 
@@ -121,7 +123,8 @@ export class MapComponent {
     private markerService: MarkerService,
     public dialog: MatDialog,
     private routerNav: Router,
-    private auth: AuthServiceService
+    private auth: AuthServiceService,
+    private http: HttpClient
   ) {
     this.auth.user.subscribe((val) => {
       console.log(val);
@@ -129,7 +132,17 @@ export class MapComponent {
       this.isAdmin = this.checkAdmin();
     });
 
-    markerService.openedDialog$.subscribe((marker) => {
+    this.http.get('/api/car-park/current').subscribe((_) =>
+      this.changingValue.next({
+        id: 0,
+        currentCharge: 0,
+        targetCharge: 0,
+        time: 0,
+        skip: true,
+      })
+    );
+
+    this.markerService.openedDialog$.subscribe((marker) => {
       if (this.hideUi) return;
       console.log(marker);
 
