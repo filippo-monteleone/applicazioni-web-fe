@@ -80,6 +80,8 @@ export class MapComponent {
     battery?: number;
   } = { username: '', roles: [] };
 
+  es: EventSource | undefined;
+
   @ViewChild(PlaceCarParkComponent) pcp!: PlaceCarParkComponent;
 
   private initMap(): void {
@@ -131,6 +133,19 @@ export class MapComponent {
       this.user = val;
       this.isAdmin = this.checkAdmin();
     });
+
+    this.es = new EventSource('/api/car-park/updates');
+    this.es.onopen = (ev) => {
+      console.log('aperto');
+    };
+
+    this.es.onmessage = (ev) => {
+      console.log('messaggio', ev);
+    };
+
+    this.es.onerror = (ev) => {
+      console.log('errore');
+    };
 
     this.http.get('/api/car-park/current').subscribe((_) =>
       this.changingValue.next({
