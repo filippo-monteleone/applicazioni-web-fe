@@ -4,7 +4,7 @@
     <div class="head-info">
       <mat-card-header>
         <mat-card-title-group>
-          <mat-card-title>Hartono Mail</mat-card-title>
+          <mat-card-title>{{ name }}</mat-card-title>
           <mat-card-subtitle>Ventuno 34, 7392</mat-card-subtitle>
         </mat-card-title-group>
       </mat-card-header>
@@ -13,13 +13,13 @@
           <mat-chip>
             <div class="container">
               <mat-icon>battery_charging_full</mat-icon>
-              <span>0,5 €/Kw</span>
+              <span>{{ pricePower }} €/Kw</span>
             </div>
           </mat-chip>
           <mat-chip>
             <div class="container">
               <mat-icon>access_time_filled</mat-icon>
-              <span>2,5 €/h</span>
+              <span>{{ priceParking }} €/h</span>
             </div>
           </mat-chip>
         </mat-chip-set>

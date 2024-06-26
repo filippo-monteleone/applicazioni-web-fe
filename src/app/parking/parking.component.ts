@@ -27,6 +27,14 @@ export class ParkingComponent {
         targetCharge: number;
         time: number;
         skip?: boolean;
+        current?: {
+          id: number;
+          name: string;
+          parkRate: number;
+          chargeRate: number;
+          inQueue?: boolean;
+          pos?: number;
+        };
       }
     | undefined;
   @Input() shouldExpand: Subject<{
@@ -35,10 +43,21 @@ export class ParkingComponent {
     targetCharge: number;
     time: number;
     skip?: boolean;
+    current?: {
+      id: number;
+      name: string;
+      parkRate: number;
+      chargeRate: number;
+      inQueue?: boolean;
+      pos?: number;
+    };
   }> = new Subject();
   @Output() shouldRetractSub: EventEmitter<boolean> = new EventEmitter();
 
   cars: number | undefined;
+  priceParking: number | undefined;
+  pricePower: number | undefined;
+  name: string | undefined;
 
   es: EventSource | undefined;
 
@@ -52,6 +71,8 @@ export class ParkingComponent {
 
   ngOnInit() {
     this.shouldExpand.subscribe((v) => {
+      console.log(v);
+
       this.expand = true;
       this.init = true;
       if (v.skip) {
@@ -60,6 +81,17 @@ export class ParkingComponent {
       }
       console.log('value is changing', v);
       this.info = v;
+
+      if (v.current?.inQueue) {
+        this.inTraffic = false;
+        this.arrived = false;
+
+        this.cars = v.current.pos;
+        this.price = v.current.parkRate;
+        this.priceParking = v.current.parkRate;
+        this.pricePower = v.current.chargeRate;
+        this.name = v.current.name;
+      }
     });
 
     this.es = new EventSource('/api/car-park/updates');
@@ -69,7 +101,6 @@ export class ParkingComponent {
 
     this.es.onmessage = (ev) => {
       this.cars = Number(ev.data);
-      if (this.cars == -1) this.es?.close();
       console.log('messaggio', ev);
     };
 
@@ -97,6 +128,9 @@ export class ParkingComponent {
         if (_.status == 'Full') {
           this.inTraffic = false;
           this.arrived = false;
+        } else {
+          this.inTraffic = false;
+          this.arrived = true;
         }
       });
     console.log(this.info);

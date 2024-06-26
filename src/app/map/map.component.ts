@@ -66,6 +66,14 @@ export class MapComponent {
     targetCharge: number;
     time: number;
     skip?: boolean;
+    current?: {
+      id: number;
+      name: string;
+      parkRate: number;
+      chargeRate: number;
+      inQueue?: boolean;
+      pos?: number;
+    };
   }> = new Subject();
   retracted: Subject<boolean> = new Subject();
 
@@ -147,15 +155,33 @@ export class MapComponent {
     //   console.log('errore');
     // };
 
-    this.http.get('/api/car-park/current').subscribe((_) =>
-      this.changingValue.next({
-        id: 0,
-        currentCharge: 0,
-        targetCharge: 0,
-        time: 0,
-        skip: true,
-      })
-    );
+    this.http
+      .get<{
+        id: number;
+        name: string;
+        parkRate: number;
+        chargeRate: number;
+        inQueue?: boolean;
+        pos?: number;
+      }>('/api/car-park/current')
+      .subscribe((_) => {
+        console.log('hello', _);
+        this.changingValue.next({
+          id: _.id,
+          currentCharge: 0,
+          targetCharge: 0,
+          time: 0,
+          skip: true,
+          current: {
+            id: _.id,
+            name: _.name,
+            parkRate: _.parkRate,
+            chargeRate: _.chargeRate,
+            inQueue: _.inQueue,
+            pos: _.pos,
+          },
+        });
+      });
 
     this.markerService.openedDialog$.subscribe((marker) => {
       if (this.hideUi) return;
