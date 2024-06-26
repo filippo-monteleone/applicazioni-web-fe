@@ -38,6 +38,10 @@ export class ParkingComponent {
   }> = new Subject();
   @Output() shouldRetractSub: EventEmitter<boolean> = new EventEmitter();
 
+  cars: number | undefined;
+
+  es: EventSource | undefined;
+
   constructor(private http: HttpClient) {
     setInterval(() => {
       // console.log(this.shouldRetract);
@@ -57,6 +61,21 @@ export class ParkingComponent {
       console.log('value is changing', v);
       this.info = v;
     });
+
+    this.es = new EventSource('/api/car-park/updates');
+    this.es.onopen = (ev) => {
+      console.log('aperto');
+    };
+
+    this.es.onmessage = (ev) => {
+      this.cars = Number(ev.data);
+      if (this.cars == -1) this.es?.close();
+      console.log('messaggio', ev);
+    };
+
+    this.es.onerror = (ev) => {
+      console.log('errore');
+    };
   }
 
   retract() {
@@ -70,8 +89,16 @@ export class ParkingComponent {
 
   checkIn() {
     this.http
-      .post(`/api/car-park/${this.info?.id}/park`, this.info)
-      .subscribe((_) => (this.inTraffic = false));
+      .post<{ status: string }>(
+        `/api/car-park/${this.info?.id}/park`,
+        this.info
+      )
+      .subscribe((_) => {
+        if (_.status == 'Full') {
+          this.inTraffic = false;
+          this.arrived = false;
+        }
+      });
     console.log(this.info);
   }
 }
