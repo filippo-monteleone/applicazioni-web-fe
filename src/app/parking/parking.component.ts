@@ -55,23 +55,18 @@ export class ParkingComponent {
   @Output() shouldRetractSub: EventEmitter<boolean> = new EventEmitter();
 
   cars: number | undefined;
-  priceParking: number | undefined;
-  pricePower: number | undefined;
+  priceParking: number = 0;
+  pricePower: number = 0;
   name: string | undefined;
+  endAt: Date = new Date();
 
   es: EventSource | undefined;
 
-  constructor(private http: HttpClient) {
-    setInterval(() => {
-      // console.log(this.shouldRetract);
-      // this.shouldExpand = !this.shouldExpand;
-      this.price += 0.1;
-    }, 2000);
-  }
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.shouldExpand.subscribe((v) => {
-      console.log(v);
+      console.log('qua', v);
 
       this.expand = true;
       this.init = true;
@@ -82,12 +77,27 @@ export class ParkingComponent {
       console.log('value is changing', v);
       this.info = v;
 
+      // setInterval(
+      //   (priceParking, priceCharge) => {
+      //     // console.log(this.shouldRetract);
+      //     // this.shouldExpand = !this.shouldExpand;
+      //     this.price += 0.1;
+      //   },
+      //   2000,
+      //   5,
+      //   10
+      // );
+
       if (v.current?.inQueue) {
         this.inTraffic = false;
         this.arrived = false;
 
         this.cars = v.current.pos;
-        this.price = v.current.parkRate;
+        this.priceParking = v.current.parkRate;
+        this.pricePower = v.current.chargeRate;
+        this.name = v.current.name;
+      }
+      if (v.current) {
         this.priceParking = v.current.parkRate;
         this.pricePower = v.current.chargeRate;
         this.name = v.current.name;
@@ -101,6 +111,11 @@ export class ParkingComponent {
 
     this.es.onmessage = (ev) => {
       this.cars = Number(ev.data);
+      if (this.cars == -1) {
+        this.inTraffic = false;
+        this.arrived = true;
+      }
+
       console.log('messaggio', ev);
     };
 
@@ -120,19 +135,33 @@ export class ParkingComponent {
 
   checkIn() {
     this.http
-      .post<{ status: string }>(
+      .post<{ status: string; endParking: string }>(
         `/api/car-park/${this.info?.id}/park`,
         this.info
       )
       .subscribe((_) => {
+        console.log('qua', _);
+        this.endAt = new Date(_.endParking);
+
         if (_.status == 'Full') {
           this.inTraffic = false;
           this.arrived = false;
         } else {
           this.inTraffic = false;
           this.arrived = true;
+          setTimeout(() => {
+            this.retract();
+          }, this.endAt.getTime() - new Date().getTime());
         }
       });
     console.log(this.info);
+    this.priceParking = this.info?.current?.parkRate!;
+    this.pricePower = this.info?.current?.chargeRate!;
+    setInterval(() => {
+      // console.log(this.shouldRetract);
+      // this.shouldExpand = !this.shouldExpand;
+      this.price += 0.1;
+      console.log(this.priceParking, this.pricePower);
+    }, 2000);
   }
 }

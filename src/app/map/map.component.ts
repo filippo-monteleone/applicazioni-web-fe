@@ -205,7 +205,7 @@ export class MapComponent {
       });
 
       mydialog.afterClosed().subscribe((result) => {
-        console.log('qua', result);
+        console.log('hello', result);
         if (result) {
           if (this.map && this.firstWaypoint && this.myPosition) {
             this.route?.remove();

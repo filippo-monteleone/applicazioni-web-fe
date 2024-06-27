@@ -108,6 +108,8 @@ export class DialogComponent {
         currentCharge: this.currentCharge,
         targetCharge: this.targetCharge,
         time: this.realtime,
+        parkRate: this.data.info.parkRate,
+        chargeRate: this.data.info.chargeRate,
       });
     }
   }
