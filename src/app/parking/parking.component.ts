@@ -71,6 +71,7 @@ export class ParkingComponent {
 
   batteryPower: number = 0;
   es: EventSource | undefined;
+  howLongWillItTake: number = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -91,6 +92,7 @@ export class ParkingComponent {
       this.pricePower = this.info.chargeRate!;
       this.priceParking = this.info.parkRate!;
       this.name = this.info.name;
+      console.log(this.info, '7');
 
       if (v.current?.inQueue) {
         this.inTraffic = false;
@@ -118,6 +120,37 @@ export class ParkingComponent {
       if (this.cars == -1) {
         this.inTraffic = false;
         this.arrived = true;
+
+        console.log('7', this.info, this.info?.time! * 60 * 60 * 1000);
+
+        let chargeInterval = setInterval(() => {
+          this.price += this.info?.parkRate! / 60 / 60;
+          this.price = Number(this.price.toFixed(2));
+          console.log(this.price, this.info?.parkRate! / 60 / 60);
+        }, 1000);
+
+        let leaveTimeout = setTimeout(() => {
+          this.retract();
+          clearInterval(chargeInterval);
+        }, this.info?.time! * 60 * 60 * 1000);
+
+        let powerInterval = setInterval(() => {
+          // console.log(this.shouldRetract);
+          // this.shouldExpand = !this.shouldExpand;
+
+          this.price += this.info?.chargePricePerSec!;
+          this.price = Number(this.price.toFixed(2));
+
+          let t = this.info?.targetCharge! - this.info?.currentCharge!;
+          t = t / (this.info?.time! * 60 * 60);
+          console.log(this.info?.time);
+          this.batteryPower += t;
+          this.batteryPower = Number(this.batteryPower.toFixed(2));
+
+          if (this.price >= this.info?.chargeRateTotalPrice!) {
+            clearInterval(powerInterval);
+          }
+        }, 1000);
       }
 
       console.log('messaggio', ev);
