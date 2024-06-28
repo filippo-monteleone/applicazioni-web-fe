@@ -64,6 +64,10 @@ export class MapComponent {
     id: number;
     currentCharge: number;
     targetCharge: number;
+    chargeRateTotalPrice: number;
+    chargePricePerSec: number;
+    name: string;
+
     time: number;
     skip?: boolean;
     current?: {
@@ -170,7 +174,10 @@ export class MapComponent {
           id: _.id,
           currentCharge: 0,
           targetCharge: 0,
+          chargeRateTotalPrice: 0,
+          chargePricePerSec: 0,
           time: 0,
+          name: '',
           skip: true,
           current: {
             id: _.id,
@@ -205,7 +212,7 @@ export class MapComponent {
       });
 
       mydialog.afterClosed().subscribe((result) => {
-        console.log('hello', result);
+        console.log('28', result);
         if (result) {
           if (this.map && this.firstWaypoint && this.myPosition) {
             this.route?.remove();

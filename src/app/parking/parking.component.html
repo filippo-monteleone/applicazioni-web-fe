@@ -27,7 +27,9 @@
     </div>
     <div class="info">
       @if (arrived && !inTraffic) {
-      <h1><b>22%</b></h1>
+      <h1>
+        <b>{{ batteryPower }}%</b>
+      </h1>
       <span class="sub-text">Charging...</span>
       } @else if (!inTraffic) {
       <h1>

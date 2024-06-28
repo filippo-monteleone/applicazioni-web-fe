@@ -73,6 +73,8 @@ export class DialogComponent {
       parkRate: number;
       chargeRate: number;
       queue: number;
+      totalChargePrice: number;
+      chargePricePerSec: number;
     };
   } = inject(MAT_DIALOG_DATA) ?? { type: '' };
 
@@ -110,6 +112,9 @@ export class DialogComponent {
         time: this.realtime,
         parkRate: this.data.info.parkRate,
         chargeRate: this.data.info.chargeRate,
+        chargeRateTotalPrice: this.data.info.totalChargePrice,
+        chargePricePerSec: this.data.info.chargePricePerSec,
+        name: this.data.info.name,
       });
     }
   }
@@ -127,6 +132,11 @@ export class DialogComponent {
     this.cost = this.calculateCost(valueStart, valueEnd, batterySize);
     this.time = this.calcualteTime(valueStart, valueEnd, batterySize, power);
 
+    let c = Number(this.cost);
+
+    this.data.info.chargePricePerSec = c / (this.realtime * 60 * 60);
+    this.data.info.totalChargePrice = Number(this.cost);
+
     this.currentCharge = Number(valueStart);
     this.targetCharge = Number(valueEnd);
 
@@ -140,7 +150,10 @@ export class DialogComponent {
   ): string {
     const batteryToCharge =
       (batterySize / 100) * (Number(valueEnd) - Number(valueStart));
-    const costOfCharge = this.data.info.chargeRate * batteryToCharge * 100;
+    const costOfCharge = this.data.info.chargeRate * batteryToCharge;
+
+    this.data.info.totalChargePrice = costOfCharge;
+
     return `${Math.trunc(costOfCharge)}`;
     // return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
   }
@@ -160,12 +173,12 @@ export class DialogComponent {
 
     this.realtime = time;
 
-    console.log(
-      batteryToCharge,
-      power,
-      Math.trunc(time),
-      Math.trunc(minutes * 60)
-    );
+    // console.log(
+    //   batteryToCharge,
+    //   power,
+    //   Math.trunc(time),
+    //   Math.trunc(minutes * 60)
+    // );
 
     return `${Math.trunc(time)} hrs ${Math.trunc(minutes * 60)} mins`;
   }
