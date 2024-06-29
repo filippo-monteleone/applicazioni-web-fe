@@ -121,8 +121,6 @@ export class ParkingComponent {
         this.inTraffic = false;
         this.arrived = true;
 
-        console.log('7', this.info, this.info?.time! * 60 * 60 * 1000);
-
         let chargeInterval = setInterval(() => {
           this.price += this.info?.parkRate! / 60 / 60;
           this.price = Number(this.price.toFixed(2));
@@ -131,8 +129,11 @@ export class ParkingComponent {
 
         let leaveTimeout = setTimeout(() => {
           this.retract();
+          this.price = 0;
           clearInterval(chargeInterval);
         }, this.info?.time! * 60 * 60 * 1000);
+
+        console.log('29', this.price);
 
         let powerInterval = setInterval(() => {
           // console.log(this.shouldRetract);
@@ -190,12 +191,12 @@ export class ParkingComponent {
           let chargeInterval = setInterval(() => {
             this.price += this.info?.parkRate! / 60 / 60;
             this.price = Number(this.price.toFixed(2));
-            console.log(this.price, this.info?.parkRate! / 60 / 60);
           }, 1000);
 
           let leaveTimeout = setTimeout(() => {
             this.retract();
             clearInterval(chargeInterval);
+            this.price = 0;
           }, this.endAt.getTime() - new Date().getTime());
 
           let powerInterval = setInterval(() => {
@@ -212,6 +213,7 @@ export class ParkingComponent {
             this.batteryPower = Number(this.batteryPower.toFixed(2));
 
             if (this.price >= this.info?.chargeRateTotalPrice!) {
+              this.price = 0;
               clearInterval(powerInterval);
             }
           }, 1000);
