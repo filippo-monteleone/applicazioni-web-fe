@@ -158,6 +158,12 @@ export class DialogComponent {
     // return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
   }
 
+  calcualteCostOfTime() {
+    const hrCost = this.hrs * this.data.info.parkRate;
+    const minCost = (this.mins / 60) * this.data.info.parkRate;
+    return hrCost + minCost;
+  }
+
   calcualteTime(
     valueStart: string,
     valueEnd: string,

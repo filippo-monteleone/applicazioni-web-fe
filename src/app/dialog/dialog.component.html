@@ -15,6 +15,10 @@
 <h4 class="cost">
   Cost: <b>{{ calculate(valueStart.value, valueEnd.value).cost }}</b>
 </h4>
+<h4 class="cost">
+  Cost of park:
+  <b>{{ (this.realtime * this.data.info.parkRate).toFixed(2) }}</b>
+</h4>
 <div class="estimeted-time">
   <p>Your estimated recharge time is</p>
   <!-- <h1><b>3 hrs 20 mins</b></h1> -->
@@ -43,6 +47,9 @@
     <input matInput type="number" min="0" max="59" [(ngModel)]="mins" />
   </mat-form-field>
 </div>
+<h4 class="cost">
+  Cost: <b>{{ calcualteCostOfTime() }}</b>
+</h4>
 <button mat-button class="btn-next" (click)="nextPhase()">Next</button>
 
 } @else if (phase == 3) {
