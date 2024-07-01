@@ -151,10 +151,11 @@ export class DialogComponent {
     const batteryToCharge =
       (batterySize / 100) * (Number(valueEnd) - Number(valueStart));
     const costOfCharge = this.data.info.chargeRate * batteryToCharge;
+    console.log('test', batteryToCharge, costOfCharge);
 
     this.data.info.totalChargePrice = costOfCharge;
 
-    return `${Math.trunc(costOfCharge)}`;
+    return `${costOfCharge.toFixed(2)}`;
     // return `${Math.trunc(Number(value) * this.energyCost * 100) / 100} €`;
   }
 

@@ -67,7 +67,7 @@ export class MapComponent {
     chargeRateTotalPrice: number;
     chargePricePerSec: number;
     name: string;
-
+    endParking?: Date;
     time: number;
     skip?: boolean;
     current?: {
@@ -167,6 +167,7 @@ export class MapComponent {
         chargeRate: number;
         inQueue?: boolean;
         pos?: number;
+        endParking?: Date;
       }>('/api/car-park/current')
       .subscribe((_) => {
         console.log('hello', _);
@@ -178,6 +179,7 @@ export class MapComponent {
           chargePricePerSec: 0,
           time: 0,
           name: '',
+          endParking: _.endParking,
           skip: true,
           current: {
             id: _.id,

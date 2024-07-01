@@ -5,6 +5,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { Subject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-parking',
@@ -31,7 +32,7 @@ export class ParkingComponent {
         parkRate?: number;
         time: number;
         name: string;
-
+        endParking?: Date;
         skip?: boolean;
         current?: {
           id: number;
@@ -52,6 +53,8 @@ export class ParkingComponent {
     name: string;
     time: number;
     skip?: boolean;
+    endParking?: Date;
+
     current?: {
       id: number;
       name: string;
@@ -92,7 +95,13 @@ export class ParkingComponent {
       this.pricePower = this.info.chargeRate!;
       this.priceParking = this.info.parkRate!;
       this.name = this.info.name;
-      console.log(this.info, '7');
+
+      if (this.info.endParking) {
+        let leaveTimeout = setTimeout(() => {
+          this.retract();
+          this.price = 0;
+        }, dayjs(this.info.endParking).valueOf() - new Date().getTime());
+      }
 
       if (v.current?.inQueue) {
         this.inTraffic = false;
