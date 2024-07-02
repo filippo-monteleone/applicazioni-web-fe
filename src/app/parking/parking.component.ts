@@ -6,6 +6,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { Subject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import dayjs from 'dayjs';
+interface payList {
+  id?: number;
+  current: number;
+  step: number;
+}
 
 @Component({
   selector: 'app-parking',
@@ -42,6 +47,10 @@ export class ParkingComponent {
           inQueue?: boolean;
           pos?: number;
         };
+        chargeCurrent?: number;
+        stepCurrent?: number;
+        parkCurrent?: number;
+        stepPark?: number;
       }
     | undefined;
   @Input() shouldExpand: Subject<{
@@ -54,7 +63,10 @@ export class ParkingComponent {
     time: number;
     skip?: boolean;
     endParking?: Date;
-
+    chargeCurrent?: number;
+    stepCurrent?: number;
+    parkCurrent?: number;
+    stepPark?: number;
     current?: {
       id: number;
       name: string;
@@ -79,7 +91,7 @@ export class ParkingComponent {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.shouldExpand.subscribe((v) => {
+    this.shouldExpand.subscribe(async (v) => {
       console.log('qua', v);
 
       this.expand = true;
@@ -97,9 +109,34 @@ export class ParkingComponent {
       this.name = this.info.name;
 
       if (this.info.endParking) {
+        console.log(this.info, 'eee');
+
+        let powerInterval = setInterval(() => {
+          // console.log(this.shouldRetract);
+          // this.shouldExpand = !this.shouldExpand;
+
+          if (this.price < this.info?.chargeCurrent!)
+            this.price = this.info?.chargeCurrent!;
+
+          this.price += this.info?.stepCurrent! + this.info?.stepPark!;
+          this.price = Number(this.price.toFixed(2));
+
+          let t = this.info?.targetCharge! - this.info?.currentCharge!;
+          t = t / (this.info?.time! * 60 * 60);
+          this.batteryPower += t;
+          this.batteryPower = Number(this.batteryPower.toFixed(2));
+
+          // if (this.price >= this.info?.chargeRateTotalPrice!) {
+          //   this.price = 0;
+          //   localStorage.setItem('price', this.price.toString());
+          //   clearInterval(powerInterval);
+          // }
+        }, 1000);
+
         let leaveTimeout = setTimeout(() => {
           this.retract();
           this.price = 0;
+          clearInterval(powerInterval);
         }, dayjs(this.info.endParking).valueOf() - new Date().getTime());
       }
 
@@ -116,6 +153,7 @@ export class ParkingComponent {
         this.priceParking = v.current.parkRate;
         this.pricePower = v.current.chargeRate;
         this.name = v.current.name;
+        this.price = Number(localStorage.getItem('price'));
       }
     });
 
@@ -208,7 +246,7 @@ export class ParkingComponent {
             this.price = 0;
           }, this.endAt.getTime() - new Date().getTime());
 
-          let powerInterval = setInterval(() => {
+          let powerInterval = setInterval(async () => {
             // console.log(this.shouldRetract);
             // this.shouldExpand = !this.shouldExpand;
 
@@ -217,12 +255,12 @@ export class ParkingComponent {
 
             let t = this.info?.targetCharge! - this.info?.currentCharge!;
             t = t / (this.info?.time! * 60 * 60);
-            console.log(this.info?.time);
             this.batteryPower += t;
             this.batteryPower = Number(this.batteryPower.toFixed(2));
 
             if (this.price >= this.info?.chargeRateTotalPrice!) {
               this.price = 0;
+              localStorage.setItem('price', this.price.toString());
               clearInterval(powerInterval);
             }
           }, 1000);

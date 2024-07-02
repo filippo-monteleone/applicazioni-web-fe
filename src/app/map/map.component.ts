@@ -70,6 +70,10 @@ export class MapComponent {
     endParking?: Date;
     time: number;
     skip?: boolean;
+    chargeCurrent?: number;
+    stepCurrent?: number;
+    parkCurrent?: number;
+    stepPark?: number;
     current?: {
       id: number;
       name: string;
@@ -166,6 +170,10 @@ export class MapComponent {
         parkRate: number;
         chargeRate: number;
         inQueue?: boolean;
+        chargeCurrent?: number;
+        stepCurrent?: number;
+        parkCurrent?: number;
+        stepPark?: number;
         pos?: number;
         endParking?: Date;
       }>('/api/car-park/current')
@@ -181,6 +189,10 @@ export class MapComponent {
           name: '',
           endParking: _.endParking,
           skip: true,
+          chargeCurrent: _.chargeCurrent,
+          stepCurrent: _.stepCurrent,
+          parkCurrent: _.parkCurrent,
+          stepPark: _.stepPark,
           current: {
             id: _.id,
             name: _.name,
