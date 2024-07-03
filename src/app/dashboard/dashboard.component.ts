@@ -106,10 +106,26 @@ export class DashboardComponent {
   onAccOpen(i: number) {
     console.log(i);
     this.http
-      .get<{ length: number }>(
-        `/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`
-      )
+      .get<{
+        carSpots: {
+          id: number;
+          userId: number;
+        }[];
+        length: number;
+      }>(`/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`)
       .subscribe((_) => {
+        let parkSpots: ParkSpot[] = [];
+
+        _.carSpots.forEach((element) => {
+          parkSpots.push({
+            name: element.userId?.toString(),
+            position: element.id,
+            free: element.userId == null,
+          });
+        });
+
+        console.log(parkSpots);
+        this.parkSource = parkSpots;
         this.length = _.length;
       });
   }
