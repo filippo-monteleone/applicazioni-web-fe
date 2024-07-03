@@ -74,6 +74,8 @@ export class MapComponent {
     stepCurrent?: number;
     parkCurrent?: number;
     stepPark?: number;
+    battery?: number;
+    batteryStep?: number;
     current?: {
       id: number;
       name: string;
@@ -174,6 +176,8 @@ export class MapComponent {
         stepCurrent?: number;
         parkCurrent?: number;
         stepPark?: number;
+        battery?: number;
+        batteryStep?: number;
         pos?: number;
         endParking?: Date;
       }>('/api/car-park/current')
@@ -193,6 +197,8 @@ export class MapComponent {
           stepCurrent: _.stepCurrent,
           parkCurrent: _.parkCurrent,
           stepPark: _.stepPark,
+          battery: _.battery,
+          batteryStep: _.batteryStep,
           current: {
             id: _.id,
             name: _.name,

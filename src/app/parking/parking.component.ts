@@ -51,6 +51,8 @@ export class ParkingComponent {
         stepCurrent?: number;
         parkCurrent?: number;
         stepPark?: number;
+        battery?: number;
+        batteryStep?: number;
       }
     | undefined;
   @Input() shouldExpand: Subject<{
@@ -67,6 +69,8 @@ export class ParkingComponent {
     stepCurrent?: number;
     parkCurrent?: number;
     stepPark?: number;
+    battery?: number;
+    batteryStep?: number;
     current?: {
       id: number;
       name: string;
@@ -121,16 +125,11 @@ export class ParkingComponent {
           this.price += this.info?.stepCurrent! + this.info?.stepPark!;
           this.price = Number(this.price.toFixed(2));
 
-          let t = this.info?.targetCharge! - this.info?.currentCharge!;
-          t = t / (this.info?.time! * 60 * 60);
-          this.batteryPower += t;
-          this.batteryPower = Number(this.batteryPower.toFixed(2));
+          if (this.batteryPower < this.info?.battery!)
+            this.batteryPower = this.info?.battery!;
 
-          // if (this.price >= this.info?.chargeRateTotalPrice!) {
-          //   this.price = 0;
-          //   localStorage.setItem('price', this.price.toString());
-          //   clearInterval(powerInterval);
-          // }
+          this.batteryPower += this.info?.batteryStep!;
+          this.batteryPower = Number(this.batteryPower.toFixed(2));
         }, 1000);
 
         let leaveTimeout = setTimeout(() => {
@@ -191,6 +190,7 @@ export class ParkingComponent {
 
           let t = this.info?.targetCharge! - this.info?.currentCharge!;
           t = t / (this.info?.time! * 60 * 60);
+          console.log(t, 'controlla');
           console.log(this.info?.time);
           this.batteryPower += t;
           this.batteryPower = Number(this.batteryPower.toFixed(2));
