@@ -237,33 +237,25 @@ export class ParkingComponent {
 
           let chargeInterval = setInterval(() => {
             this.price += this.info?.parkRate! / 60 / 60;
-            this.price = Number(this.price.toFixed(2));
           }, 1000);
-
-          let leaveTimeout = setTimeout(() => {
-            this.retract();
-            clearInterval(chargeInterval);
-            this.price = 0;
-          }, this.endAt.getTime() - new Date().getTime());
 
           let powerInterval = setInterval(async () => {
             // console.log(this.shouldRetract);
             // this.shouldExpand = !this.shouldExpand;
 
             this.price += this.info?.chargePricePerSec!;
-            this.price = Number(this.price.toFixed(2));
 
             let t = this.info?.targetCharge! - this.info?.currentCharge!;
             t = t / (this.info?.time! * 60 * 60);
             this.batteryPower += t;
-            this.batteryPower = Number(this.batteryPower.toFixed(2));
-
-            if (this.price >= this.info?.chargeRateTotalPrice!) {
-              this.price = 0;
-              localStorage.setItem('price', this.price.toString());
-              clearInterval(powerInterval);
-            }
           }, 1000);
+
+          let leaveTimeout = setTimeout(() => {
+            this.retract();
+            clearInterval(chargeInterval);
+            clearInterval(powerInterval);
+            this.price = 0;
+          }, this.endAt.getTime() - new Date().getTime());
         }
       });
   }

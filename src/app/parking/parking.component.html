@@ -28,7 +28,7 @@
     <div class="info">
       @if (arrived && !inTraffic) {
       <h1>
-        <b>{{ batteryPower }}%</b>
+        <b>{{ batteryPower.toFixed(2) }}%</b>
       </h1>
       <span class="sub-text">Charging...</span>
       } @else if (!inTraffic) {
@@ -42,7 +42,7 @@
   <mat-card-actions>
     @if (arrived && !inTraffic) {
     <button mat-flat-button color="warn" (click)="retract()">
-      Leave and pay {{ price }}€
+      Leave and pay {{ price.toFixed(2) }}€
     </button>
     } @else if (!inTraffic) {
     <button mat-flat-button color="warn">Leave</button>
