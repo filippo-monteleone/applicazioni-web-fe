@@ -139,8 +139,28 @@ export class DashboardComponent {
     this.selectedVal = val;
     if (this.selectedVal == 'stats')
       this.http
-        .get<{ length: number }>(`/api/payments?page=1&resultsPerPage=10`)
+        .get<{
+          invoices: {
+            type: string;
+            userId: string;
+            paid: number;
+            pro: boolean;
+          }[];
+          length: number;
+        }>(`/api/payments?page=1&resultsPerPage=10`)
         .subscribe((_) => {
+          let payments: Payment[] = [];
+
+          _.invoices.forEach((element) => {
+            payments.push({
+              type: element.type,
+              name: element.userId,
+              userType: element.pro ? 'Pro' : '',
+              cost: element.paid,
+            });
+          });
+
+          this.paymentSource = payments;
           this.length = _.length;
         });
   }
