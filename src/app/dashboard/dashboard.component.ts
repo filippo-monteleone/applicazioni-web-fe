@@ -29,7 +29,14 @@ const PARK_DATA: ParkSpot[] = [
 ];
 
 const PAY_DATA: Payment[] = [
-  { type: 'Parking', name: 'Boron', userType: 'Premium', cost: 25.5 },
+  {
+    type: 'Parking',
+    name: 'Boron',
+    userType: 'Premium',
+    cost: 25.5,
+    dateEnd: new Date(),
+    dateStart: new Date(),
+  },
 ];
 
 export interface Payment {
@@ -37,6 +44,8 @@ export interface Payment {
   name: string;
   userType: string;
   cost: number;
+  dateStart: Date;
+  dateEnd: Date;
 }
 
 export interface CarPark {
@@ -86,6 +95,8 @@ export class DashboardComponent {
   paymentDisplayedColumns: string[] = ['Paid for', 'Username', 'Type', 'Cost'];
 
   hidePageSize: boolean = true;
+
+  payments: Payment[] | undefined;
 
   constructor(
     private _location: Location,
@@ -145,6 +156,8 @@ export class DashboardComponent {
             userId: string;
             paid: number;
             pro: boolean;
+            dateStart: Date;
+            dateEnd: Date;
           }[];
           length: number;
         }>(`/api/payments?page=1&resultsPerPage=10`)
@@ -155,10 +168,14 @@ export class DashboardComponent {
             payments.push({
               type: element.type,
               name: element.userId,
-              userType: element.pro ? 'Pro' : '',
+              userType: element.pro ? 'Pro' : 'Basic',
               cost: element.paid,
+              dateStart: element.dateStart,
+              dateEnd: element.dateEnd,
             });
           });
+
+          this.payments = payments;
 
           this.paymentSource = payments;
           this.length = _.length;
@@ -212,5 +229,33 @@ export class DashboardComponent {
 
     this.router.navigate(['/'], navigationExtras);
     // this.sharedService.setData('Close');
+  }
+
+  filters(check: boolean, index: string) {
+    console.log(index, check);
+    let payments = this.paymentSource!;
+    payments = payments.filter((p) => {
+      if (!check) {
+        if (index == 'Basic' && p.userType == 'Basic') return false;
+        if (index == 'Premium' && p.userType == 'Pro') return false;
+        if (index == 'Charging' && p.type == 'Charge') return false;
+        if (index == 'Parking' && p.type == 'Parking') return false;
+      }
+      return true;
+    });
+
+    let remainingPayments = this.payments!.filter((p) => {
+      if (check) {
+        if (index == 'Basic' && p.userType == 'Basic') return true;
+        if (index == 'Premium' && p.userType == 'Pro') return true;
+        if (index == 'Charging' && p.type == 'Charge') return true;
+        if (index == 'Parking' && p.type == 'Parking') return true;
+      }
+      return false;
+    });
+
+    payments = [...payments, ...remainingPayments];
+
+    this.paymentSource = payments;
   }
 }

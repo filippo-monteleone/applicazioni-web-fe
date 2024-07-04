@@ -99,10 +99,20 @@
       </mat-form-field>
     </div>
     <div class="field-container">
-      <mat-checkbox>Parking</mat-checkbox>
-      <mat-checkbox>Charging</mat-checkbox>
-      <mat-checkbox>Basic</mat-checkbox>
-      <mat-checkbox>Premium</mat-checkbox>
+      <mat-checkbox (change)="filters($event.checked, 'Parking')" checked="true"
+        >Parking</mat-checkbox
+      >
+      <mat-checkbox
+        (change)="filters($event.checked, 'Charging')"
+        checked="true"
+        >Charging</mat-checkbox
+      >
+      <mat-checkbox (change)="filters($event.checked, 'Basic')" checked="true"
+        >Basic</mat-checkbox
+      >
+      <mat-checkbox (change)="filters($event.checked, 'Premium')" checked="true"
+        >Premium</mat-checkbox
+      >
     </div>
   </mat-expansion-panel>
 
