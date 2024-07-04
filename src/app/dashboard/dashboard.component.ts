@@ -232,7 +232,6 @@ export class DashboardComponent {
   }
 
   filters(check: boolean, index: string) {
-    console.log(index, check);
     let payments = this.paymentSource!;
     payments = payments.filter((p) => {
       if (!check) {
