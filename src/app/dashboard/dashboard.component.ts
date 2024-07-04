@@ -5,7 +5,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule, Location, NgFor } from '@angular/common';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -78,6 +78,8 @@ export interface ParkSpot {
     MatButtonModule,
     NgFor,
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -97,6 +99,10 @@ export class DashboardComponent {
   hidePageSize: boolean = true;
 
   payments: Payment[] | undefined;
+  filteredPayments: Payment[] | undefined;
+
+  startDate: Date | undefined;
+  endDate: Date | undefined;
 
   constructor(
     private _location: Location,
@@ -176,6 +182,7 @@ export class DashboardComponent {
           });
 
           this.payments = payments;
+          this.filteredPayments = payments;
 
           this.paymentSource = payments;
           this.length = _.length;
@@ -232,7 +239,8 @@ export class DashboardComponent {
   }
 
   filters(check: boolean, index: string) {
-    let payments = this.paymentSource!;
+    let payments = this.filteredPayments!;
+
     payments = payments.filter((p) => {
       if (!check) {
         if (index == 'Basic' && p.userType == 'Basic') return false;
@@ -240,6 +248,7 @@ export class DashboardComponent {
         if (index == 'Charging' && p.type == 'Charge') return false;
         if (index == 'Parking' && p.type == 'Parking') return false;
       }
+
       return true;
     });
 
@@ -249,12 +258,28 @@ export class DashboardComponent {
         if (index == 'Premium' && p.userType == 'Pro') return true;
         if (index == 'Charging' && p.type == 'Charge') return true;
         if (index == 'Parking' && p.type == 'Parking') return true;
+
+        if (index == 'Start' && p.dateStart > this.startDate!) {
+          return true;
+        } else if (index == 'End' && p.dateEnd < this.endDate!) {
+          return true;
+        }
       }
+
       return false;
     });
 
     payments = [...payments, ...remainingPayments];
 
-    this.paymentSource = payments;
+    console.log(payments);
+
+    this.paymentSource = payments.filter((p) => {
+      if (index == 'Start' && p.dateStart > this.startDate!) {
+        return true;
+      } else if (index == 'End' && p.dateEnd < this.endDate!) {
+        return true;
+      }
+      return false;
+    });
   }
 }

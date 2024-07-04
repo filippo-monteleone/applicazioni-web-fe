@@ -90,12 +90,22 @@
     <div class="field-container">
       <mat-form-field>
         <mat-label>Start</mat-label>
-        <input matInput type="datetime-local" />
+        <input
+          matInput
+          type="datetime-local"
+          [(ngModel)]="startDate"
+          (input)="filters(false, 'Start')"
+        />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>End</mat-label>
-        <input matInput type="datetime-local" />
+        <input
+          matInput
+          type="datetime-local"
+          [(ngModel)]="endDate"
+          (input)="filters(false, 'End')"
+        />
       </mat-form-field>
     </div>
     <div class="field-container">
