@@ -106,6 +106,8 @@ export class ParkingComponent {
       }
       console.log('value is changing', v);
       this.info = v;
+      sessionStorage.setItem('info', JSON.stringify(this.info));
+
       this.batteryPower = this.info.currentCharge;
 
       this.pricePower = this.info.chargeRate!;
@@ -162,43 +164,63 @@ export class ParkingComponent {
     };
 
     this.es.onmessage = (ev) => {
-      this.cars = Number(ev.data);
+      let obj: { pos: number; time?: number } = JSON.parse(ev.data);
+
+      this.cars = Number(obj.pos);
       if (this.cars == -1) {
         this.inTraffic = false;
         this.arrived = true;
 
         let chargeInterval = setInterval(() => {
           this.price += this.info?.parkRate! / 60 / 60;
-          this.price = Number(this.price.toFixed(2));
-          console.log(this.price, this.info?.parkRate! / 60 / 60);
         }, 1000);
-
-        let leaveTimeout = setTimeout(() => {
-          this.retract();
-          this.price = 0;
-          clearInterval(chargeInterval);
-        }, this.info?.time! * 60 * 60 * 1000);
-
-        console.log('29', this.price);
 
         let powerInterval = setInterval(() => {
           // console.log(this.shouldRetract);
           // this.shouldExpand = !this.shouldExpand;
 
           this.price += this.info?.chargePricePerSec!;
-          this.price = Number(this.price.toFixed(2));
 
           let t = this.info?.targetCharge! - this.info?.currentCharge!;
           t = t / (this.info?.time! * 60 * 60);
-          console.log(t, 'controlla');
-          console.log(this.info?.time);
           this.batteryPower += t;
-          this.batteryPower = Number(this.batteryPower.toFixed(2));
-
-          if (this.price >= this.info?.chargeRateTotalPrice!) {
-            clearInterval(powerInterval);
-          }
         }, 1000);
+
+        console.log(obj.time);
+
+        if (obj.pos == -1) {
+          console.log('qua');
+          this.http
+            .get<{
+              id: number;
+              name: string;
+              parkRate: number;
+              chargeRate: number;
+              inQueue?: boolean;
+              chargeCurrent?: number;
+              stepCurrent?: number;
+              parkCurrent?: number;
+              stepPark?: number;
+              battery?: number;
+              batteryStep?: number;
+              pos?: number;
+              endParking?: Date;
+            }>('/api/car-park/current')
+            .subscribe((_) => {
+              console.log('ciao', _);
+            });
+
+          let time = this.info?.time ?? obj.time;
+          if (this.info?.time == 0) time = obj.time;
+          console.log(this.info?.time, obj.time);
+          let leaveTimeout = setTimeout(() => {
+            console.log('close');
+            this.retract();
+            this.price = 0;
+            clearInterval(chargeInterval);
+            clearInterval(powerInterval);
+          }, time! * 60 * 60 * 1000);
+        }
       }
 
       console.log('messaggio', ev);
