@@ -104,6 +104,22 @@ export class DashboardComponent {
   startDate: Date | undefined;
   endDate: Date | undefined;
 
+  filtersObj: {
+    Start: number | undefined;
+    End: number | undefined;
+    Parking: boolean;
+    Charging: boolean;
+    Basic: boolean;
+    Premium: boolean;
+  } = {
+    Start: 0,
+    End: 0,
+    Parking: true,
+    Charging: true,
+    Basic: true,
+    Premium: true,
+  };
+
   constructor(
     private _location: Location,
     private router: Router,
@@ -195,21 +211,81 @@ export class DashboardComponent {
     // .get(`/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`)
     // .subscribe();
     if (this.selectedVal == 'carparks') {
+      console.log(this.startDate, 'ciao');
       this.http
-        .get<{ length: number }>(
-          `/api/car-park/${i}/car-spots?page=${
-            e.pageIndex + 1
-          }&resultsPerPage=10`
-        )
+        .get<{ length: number }>(`/api/car-park/${i}/car-spots`, {
+          params: {
+            page: e.pageIndex + 1,
+            resultsPerPage: 10,
+          },
+        })
         .subscribe((_) => {
           this.length = _.length;
         });
     } else {
+      let query: {
+        page: number;
+        resultsPerPage: number;
+        startDate?: number;
+        endDate?: number;
+        parking?: boolean;
+        charging?: boolean;
+        basic?: boolean;
+        premium?: boolean;
+      } = {
+        page: e.pageIndex + 1,
+        resultsPerPage: 10,
+        startDate: this.startDate?.valueOf(),
+        endDate: this.endDate?.valueOf(),
+        parking: this.filtersObj.Parking,
+        charging: this.filtersObj.Charging,
+        basic: this.filtersObj.Basic,
+        premium: this.filtersObj.Premium,
+      };
+      if (this.startDate == undefined)
+        query = {
+          page: e.pageIndex + 1,
+          resultsPerPage: 10,
+          parking: this.filtersObj.Parking,
+          charging: this.filtersObj.Charging,
+          basic: this.filtersObj.Basic,
+          premium: this.filtersObj.Premium,
+        };
+
+      console.log(query, 'qua');
+
       this.http
-        .get<{ length: number }>(
-          `/api/payments?page=${e.pageIndex + 1}&resultsPerPage=10`
-        )
+        .get<{
+          length: number;
+          invoices: {
+            type: string;
+            userId: string;
+            paid: number;
+            pro: boolean;
+            dateStart: Date;
+            dateEnd: Date;
+          }[];
+        }>(`/api/payments`, {
+          params: query,
+        })
         .subscribe((_) => {
+          let payments: Payment[] = [];
+
+          _.invoices.forEach((element) => {
+            payments.push({
+              type: element.type,
+              name: element.userId,
+              userType: element.pro ? 'Pro' : 'Basic',
+              cost: element.paid,
+              dateStart: element.dateStart,
+              dateEnd: element.dateEnd,
+            });
+          });
+
+          this.payments = payments;
+          this.filteredPayments = payments;
+
+          this.paymentSource = payments;
           this.length = _.length;
         });
     }
@@ -238,8 +314,32 @@ export class DashboardComponent {
     // this.sharedService.setData('Close');
   }
 
-  filters(check: boolean, index: string) {
+  filters(
+    check: boolean,
+    index: 'Start' | 'End' | 'Basic' | 'Premium' | 'Charging' | 'Parking'
+  ) {
     let payments = this.filteredPayments!;
+
+    switch (index) {
+      case 'Start':
+        this.filtersObj[index] = this.startDate?.valueOf();
+        break;
+      case 'End':
+        this.filtersObj[index] = this.endDate?.valueOf();
+        break;
+      case 'Basic':
+        this.filtersObj[index] = check;
+        break;
+      case 'Premium':
+        this.filtersObj[index] = check;
+        break;
+      case 'Charging':
+        this.filtersObj[index] = check;
+        break;
+      case 'Parking':
+        this.filtersObj[index] = check;
+        break;
+    }
 
     payments = payments.filter((p) => {
       if (!check) {
@@ -269,17 +369,35 @@ export class DashboardComponent {
       return false;
     });
 
-    payments = [...payments, ...remainingPayments];
+    let temp: Payment[] = [];
 
-    console.log(payments);
+    payments.forEach((p) => {
+      for (let r of remainingPayments) {
+        if (r.dateStart != p.dateStart && r.name != p.name) temp.push(r);
+      }
 
-    this.paymentSource = payments.filter((p) => {
-      if (index == 'Start' && p.dateStart > this.startDate!) {
+      temp.push(p);
+    });
+
+    console.log(temp);
+
+    payments = temp;
+
+    this.paymentSource = temp.filter((p) => {
+      console.log(p.dateStart, p.dateEnd);
+
+      if (index != 'Start' && index != 'End') return true;
+
+      if (this.startDate == undefined && p.dateEnd < this.endDate!) {
         return true;
-      } else if (index == 'End' && p.dateEnd < this.endDate!) {
+      } else if (this.endDate == undefined && p.dateStart > this.startDate!) {
+        return true;
+      } else if (p.dateStart > this.startDate! && p.dateEnd < this.endDate!) {
         return true;
       }
+
       return false;
     });
+    console.log(this.paymentSource);
   }
 }
