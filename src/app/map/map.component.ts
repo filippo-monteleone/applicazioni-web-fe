@@ -67,6 +67,8 @@ export class MapComponent {
     chargeRateTotalPrice: number;
     chargePricePerSec: number;
     name: string;
+    timeCharge?: number;
+    timePark?: number;
     endParking?: Date;
     time: number;
     skip?: boolean;
@@ -222,9 +224,10 @@ export class MapComponent {
         parkRate: number;
         chargeRate: number;
         queue: number;
+        power: number;
       } = marker.target.options;
 
-      console.log(info);
+      console.log('7/5', marker.target.options);
 
       let mydialog = this.dialog.open(DialogComponent, {
         data: { type: 'buy', info },
@@ -232,7 +235,7 @@ export class MapComponent {
       });
 
       mydialog.afterClosed().subscribe((result) => {
-        console.log('28', result);
+        console.log('6', result);
         if (result) {
           if (this.map && this.firstWaypoint && this.myPosition) {
             this.route?.remove();

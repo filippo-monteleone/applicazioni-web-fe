@@ -64,6 +64,9 @@ export class DialogComponent {
   mins: number = 0;
   hrs: number = 0;
   realtime: number = 0;
+  parkTime: number = 0;
+  timeCharge: number = 0;
+  timePark: number = 0;
 
   data: {
     type: string;
@@ -75,6 +78,7 @@ export class DialogComponent {
       queue: number;
       totalChargePrice: number;
       chargePricePerSec: number;
+      power: number;
     };
   } = inject(MAT_DIALOG_DATA) ?? { type: '' };
 
@@ -89,7 +93,7 @@ export class DialogComponent {
   }
 
   ngOnInit() {
-    console.log(this.data);
+    console.log(this.data, '7/5');
   }
 
   nextPhase() {
@@ -114,6 +118,8 @@ export class DialogComponent {
         chargeRate: this.data.info.chargeRate,
         chargeRateTotalPrice: this.data.info.totalChargePrice,
         chargePricePerSec: this.data.info.chargePricePerSec,
+        timeCharge: this.timeCharge,
+        timePark: this.hrs + this.mins / 60,
         name: this.data.info.name,
       });
     }
@@ -130,7 +136,12 @@ export class DialogComponent {
     power = 10
   ) {
     this.cost = this.calculateCost(valueStart, valueEnd, batterySize);
-    this.time = this.calcualteTime(valueStart, valueEnd, batterySize, power);
+    this.time = this.calcualteTime(
+      valueStart,
+      valueEnd,
+      batterySize,
+      this.data.info.power
+    );
 
     let c = Number(this.cost);
 
@@ -171,12 +182,16 @@ export class DialogComponent {
     batterySize = 10,
     power = 10
   ) {
+    console.log(power, '7');
     const batteryToCharge =
       (batterySize / 100) * (Number(valueEnd) - Number(valueStart));
 
+    console.log(batteryToCharge, power);
     const time = batteryToCharge / power;
 
     let minutes = time % 1;
+
+    this.timeCharge = time;
 
     this.realtime = time;
 

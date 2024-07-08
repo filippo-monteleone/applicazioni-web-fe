@@ -36,6 +36,8 @@ export class ParkingComponent {
         chargeRate?: number;
         parkRate?: number;
         time: number;
+        timeCharge?: number;
+        timePark?: number;
         name: string;
         endParking?: Date;
         skip?: boolean;
@@ -171,21 +173,6 @@ export class ParkingComponent {
         this.inTraffic = false;
         this.arrived = true;
 
-        let chargeInterval = setInterval(() => {
-          this.price += this.info?.parkRate! / 60 / 60;
-        }, 1000);
-
-        let powerInterval = setInterval(() => {
-          // console.log(this.shouldRetract);
-          // this.shouldExpand = !this.shouldExpand;
-
-          this.price += this.info?.chargePricePerSec!;
-
-          let t = this.info?.targetCharge! - this.info?.currentCharge!;
-          t = t / (this.info?.time! * 60 * 60);
-          this.batteryPower += t;
-        }, 1000);
-
         console.log(obj.time);
 
         if (obj.pos == -1) {
@@ -207,19 +194,27 @@ export class ParkingComponent {
               endParking?: Date;
             }>('/api/car-park/current')
             .subscribe((_) => {
-              console.log('ciao', _);
-            });
+              this.inTraffic = false;
+              this.arrived = true;
 
-          let time = this.info?.time ?? obj.time;
-          if (this.info?.time == 0) time = obj.time;
-          console.log(this.info?.time, obj.time);
-          let leaveTimeout = setTimeout(() => {
-            console.log('close');
-            this.retract();
-            this.price = 0;
-            clearInterval(chargeInterval);
-            clearInterval(powerInterval);
-          }, time! * 60 * 60 * 1000);
+              let powerInterval = setInterval(() => {
+                if (this.price < _.chargeCurrent!)
+                  this.price = _.chargeCurrent!;
+
+                this.price += _.stepCurrent! + _.stepPark!;
+
+                if (this.batteryPower < _.battery!)
+                  this.batteryPower = _.battery!;
+
+                this.batteryPower += _.batteryStep!;
+              }, 1000);
+
+              let leaveTimeout = setTimeout(() => {
+                this.retract();
+                this.price = 0;
+                clearInterval(powerInterval);
+              }, dayjs(_.endParking).valueOf() - new Date().getTime());
+            });
         }
       }
 
@@ -241,13 +236,18 @@ export class ParkingComponent {
   }
 
   checkIn() {
+    console.log(this.info, 'ciao');
     this.http
       .post<{ status: string; endParking: string }>(
         `/api/car-park/${this.info?.id}/park`,
-        this.info
+        {
+          currentCharge: this.info?.currentCharge,
+          targetCharge: this.info?.targetCharge,
+          timeCharge: this.info?.timeCharge,
+          timePark: this.info?.timePark,
+        }
       )
       .subscribe((_) => {
-        console.log('qua', _);
         this.endAt = new Date(_.endParking);
 
         if (_.status == 'Full') {
@@ -272,12 +272,17 @@ export class ParkingComponent {
             this.batteryPower += t;
           }, 1000);
 
+          console.log(
+            dayjs(_.endParking).valueOf() - new Date().getTime(),
+            '6'
+          );
+
           let leaveTimeout = setTimeout(() => {
             this.retract();
             clearInterval(chargeInterval);
             clearInterval(powerInterval);
             this.price = 0;
-          }, this.endAt.getTime() - new Date().getTime());
+          }, dayjs(_.endParking).valueOf() - new Date().getTime());
         }
       });
   }

@@ -42,7 +42,7 @@
   <mat-card-actions>
     @if (arrived && !inTraffic) {
     <button mat-flat-button color="warn" (click)="retract()">
-      Leave and pay {{ price.toFixed(2) }}€
+      Leave and pay around {{ price.toFixed(2) }}€
     </button>
     } @else if (!inTraffic) {
     <button mat-flat-button color="warn">Leave</button>
