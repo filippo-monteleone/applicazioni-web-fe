@@ -309,6 +309,18 @@ export class DashboardComponent {
     this._location.back();
   }
 
+  save(chargeRate: number, parkRate: number, i: number) {
+    this.http
+      .put(`/api/car-park/${this.carParks?.at(i)?.id}`, {
+        parkRate,
+        chargeRate,
+      })
+      .subscribe((_) => {
+        console.log(_);
+      });
+    console.log('save', chargeRate, parkRate);
+  }
+
   openMap() {
     let navigationExtras: NavigationExtras = {
       queryParams: { test: true },

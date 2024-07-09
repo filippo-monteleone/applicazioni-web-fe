@@ -11,6 +11,11 @@
 
 .back-container > * {
   margin-bottom: 0;
+  cursor: pointer;
+}
+
+.carpark-footer {
+  display: flex;
 }
 
 .container {
