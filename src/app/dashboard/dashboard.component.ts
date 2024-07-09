@@ -345,64 +345,6 @@ export class DashboardComponent {
         break;
     }
 
-    // payments = payments.filter((p) => {
-    //   if (!check) {
-    //     if (index == 'Basic' && p.userType == 'Basic') return false;
-    //     if (index == 'Premium' && p.userType == 'Pro') return false;
-    //     if (index == 'Charging' && p.type == 'Charge') return false;
-    //     if (index == 'Parking' && p.type == 'Parking') return false;
-    //   }
-
-    //   return true;
-    // });
-
-    // let remainingPayments = this.payments!.filter((p) => {
-    //   if (check) {
-    //     if (index == 'Basic' && p.userType == 'Basic') return true;
-    //     if (index == 'Premium' && p.userType == 'Pro') return true;
-    //     if (index == 'Charging' && p.type == 'Charge') return true;
-    //     if (index == 'Parking' && p.type == 'Parking') return true;
-
-    //     if (index == 'Start' && p.dateStart > this.startDate!) {
-    //       return true;
-    //     } else if (index == 'End' && p.dateEnd < this.endDate!) {
-    //       return true;
-    //     }
-    //   }
-
-    //   return false;
-    // });
-
-    // let temp: Payment[] = [];
-
-    // payments.forEach((p) => {
-    //   for (let r of remainingPayments) {
-    //     if (r.dateStart != p.dateStart && r.name != p.name) temp.push(r);
-    //   }
-
-    //   temp.push(p);
-    // });
-
-    // console.log(temp);
-
-    // payments = temp;
-
-    // this.paymentSource = temp.filter((p) => {
-    //   console.log(p.dateStart, p.dateEnd);
-
-    //   if (index != 'Start' && index != 'End') return true;
-
-    //   if (this.startDate == undefined && p.dateEnd < this.endDate!) {
-    //     return true;
-    //   } else if (this.endDate == undefined && p.dateStart > this.startDate!) {
-    //     return true;
-    //   } else if (p.dateStart > this.startDate! && p.dateEnd < this.endDate!) {
-    //     return true;
-    //   }
-
-    //   return false;
-    // });
-    // console.log(this.paymentSource);
     let query: {
       page: number;
       resultsPerPage: number;
