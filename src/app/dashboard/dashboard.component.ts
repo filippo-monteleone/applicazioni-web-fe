@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
@@ -8,7 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule, Location, NgFor } from '@angular/common';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedHomeDashboardService } from '../shared-home-dashboard.service';
@@ -90,6 +94,7 @@ export class DashboardComponent {
   parkSource = PARK_DATA;
   paymentSource = PAY_DATA;
   length: number = 0;
+  page: number = 1;
 
   carParks: CarPark[] | undefined;
 
@@ -103,6 +108,8 @@ export class DashboardComponent {
 
   startDate: Date | undefined;
   endDate: Date | undefined;
+
+  @ViewChild('paginator') paginator!: MatPaginator;
 
   filtersObj: {
     Start: number | undefined;
@@ -211,7 +218,6 @@ export class DashboardComponent {
     // .get(`/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`)
     // .subscribe();
     if (this.selectedVal == 'carparks') {
-      console.log(this.startDate, 'ciao');
       this.http
         .get<{ length: number }>(`/api/car-park/${i}/car-spots`, {
           params: {
@@ -251,8 +257,6 @@ export class DashboardComponent {
           basic: this.filtersObj.Basic,
           premium: this.filtersObj.Premium,
         };
-
-      console.log(query, 'qua');
 
       this.http
         .get<{
@@ -318,7 +322,7 @@ export class DashboardComponent {
     check: boolean,
     index: 'Start' | 'End' | 'Basic' | 'Premium' | 'Charging' | 'Parking'
   ) {
-    let payments = this.filteredPayments!;
+    // let payments = this.filteredPayments!;
 
     switch (index) {
       case 'Start':
@@ -341,63 +345,128 @@ export class DashboardComponent {
         break;
     }
 
-    payments = payments.filter((p) => {
-      if (!check) {
-        if (index == 'Basic' && p.userType == 'Basic') return false;
-        if (index == 'Premium' && p.userType == 'Pro') return false;
-        if (index == 'Charging' && p.type == 'Charge') return false;
-        if (index == 'Parking' && p.type == 'Parking') return false;
-      }
+    // payments = payments.filter((p) => {
+    //   if (!check) {
+    //     if (index == 'Basic' && p.userType == 'Basic') return false;
+    //     if (index == 'Premium' && p.userType == 'Pro') return false;
+    //     if (index == 'Charging' && p.type == 'Charge') return false;
+    //     if (index == 'Parking' && p.type == 'Parking') return false;
+    //   }
 
-      return true;
-    });
+    //   return true;
+    // });
 
-    let remainingPayments = this.payments!.filter((p) => {
-      if (check) {
-        if (index == 'Basic' && p.userType == 'Basic') return true;
-        if (index == 'Premium' && p.userType == 'Pro') return true;
-        if (index == 'Charging' && p.type == 'Charge') return true;
-        if (index == 'Parking' && p.type == 'Parking') return true;
+    // let remainingPayments = this.payments!.filter((p) => {
+    //   if (check) {
+    //     if (index == 'Basic' && p.userType == 'Basic') return true;
+    //     if (index == 'Premium' && p.userType == 'Pro') return true;
+    //     if (index == 'Charging' && p.type == 'Charge') return true;
+    //     if (index == 'Parking' && p.type == 'Parking') return true;
 
-        if (index == 'Start' && p.dateStart > this.startDate!) {
-          return true;
-        } else if (index == 'End' && p.dateEnd < this.endDate!) {
-          return true;
-        }
-      }
+    //     if (index == 'Start' && p.dateStart > this.startDate!) {
+    //       return true;
+    //     } else if (index == 'End' && p.dateEnd < this.endDate!) {
+    //       return true;
+    //     }
+    //   }
 
-      return false;
-    });
+    //   return false;
+    // });
 
-    let temp: Payment[] = [];
+    // let temp: Payment[] = [];
 
-    payments.forEach((p) => {
-      for (let r of remainingPayments) {
-        if (r.dateStart != p.dateStart && r.name != p.name) temp.push(r);
-      }
+    // payments.forEach((p) => {
+    //   for (let r of remainingPayments) {
+    //     if (r.dateStart != p.dateStart && r.name != p.name) temp.push(r);
+    //   }
 
-      temp.push(p);
-    });
+    //   temp.push(p);
+    // });
 
-    console.log(temp);
+    // console.log(temp);
 
-    payments = temp;
+    // payments = temp;
 
-    this.paymentSource = temp.filter((p) => {
-      console.log(p.dateStart, p.dateEnd);
+    // this.paymentSource = temp.filter((p) => {
+    //   console.log(p.dateStart, p.dateEnd);
 
-      if (index != 'Start' && index != 'End') return true;
+    //   if (index != 'Start' && index != 'End') return true;
 
-      if (this.startDate == undefined && p.dateEnd < this.endDate!) {
-        return true;
-      } else if (this.endDate == undefined && p.dateStart > this.startDate!) {
-        return true;
-      } else if (p.dateStart > this.startDate! && p.dateEnd < this.endDate!) {
-        return true;
-      }
+    //   if (this.startDate == undefined && p.dateEnd < this.endDate!) {
+    //     return true;
+    //   } else if (this.endDate == undefined && p.dateStart > this.startDate!) {
+    //     return true;
+    //   } else if (p.dateStart > this.startDate! && p.dateEnd < this.endDate!) {
+    //     return true;
+    //   }
 
-      return false;
-    });
-    console.log(this.paymentSource);
+    //   return false;
+    // });
+    // console.log(this.paymentSource);
+    let query: {
+      page: number;
+      resultsPerPage: number;
+      startDate?: number;
+      endDate?: number;
+      parking?: boolean;
+      charging?: boolean;
+      basic?: boolean;
+      premium?: boolean;
+    } = {
+      page: 1,
+      resultsPerPage: 10,
+      startDate: this.startDate?.valueOf(),
+      endDate: this.endDate?.valueOf(),
+      parking: this.filtersObj.Parking,
+      charging: this.filtersObj.Charging,
+      basic: this.filtersObj.Basic,
+      premium: this.filtersObj.Premium,
+    };
+    if (this.startDate == undefined)
+      query = {
+        page: 1,
+        resultsPerPage: 10,
+        parking: this.filtersObj.Parking,
+        charging: this.filtersObj.Charging,
+        basic: this.filtersObj.Basic,
+        premium: this.filtersObj.Premium,
+      };
+
+    this.http
+      .get<{
+        length: number;
+        invoices: {
+          type: string;
+          userId: string;
+          paid: number;
+          pro: boolean;
+          dateStart: Date;
+          dateEnd: Date;
+        }[];
+      }>(`/api/payments`, {
+        params: query,
+      })
+      .subscribe((_) => {
+        let payments: Payment[] = [];
+
+        this.paginator.firstPage();
+
+        _.invoices.forEach((element) => {
+          payments.push({
+            type: element.type,
+            name: element.userId,
+            userType: element.pro ? 'Pro' : 'Basic',
+            cost: element.paid,
+            dateStart: element.dateStart,
+            dateEnd: element.dateEnd,
+          });
+        });
+
+        this.payments = payments;
+        this.filteredPayments = payments;
+
+        this.paymentSource = payments;
+        this.length = _.length;
+      });
   }
 }

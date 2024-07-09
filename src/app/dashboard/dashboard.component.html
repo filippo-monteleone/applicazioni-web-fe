@@ -163,7 +163,9 @@
     <tr mat-row *matRowDef="let row; columns: paymentDisplayedColumns"></tr>
   </table>
   <mat-paginator
+    #paginator
     (page)="handlePageEvent($event, 1)"
+    [pageIndex]="page"
     hidePageSize="true"
     [length]="length"
     pageSize="10"
