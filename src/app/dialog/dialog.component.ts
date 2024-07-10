@@ -67,6 +67,7 @@ export class DialogComponent {
   parkTime: number = 0;
   timeCharge: number = 0;
   timePark: number = 0;
+  queue: number = 0;
 
   data: {
     type: string;
@@ -98,6 +99,13 @@ export class DialogComponent {
 
   nextPhase() {
     this.phase++;
+
+    console.log(this.data.info.id);
+
+    if (this.phase == 3)
+      this.http
+        .get<{ queue: number }>(`/api/car-park/${this.data.info.id}/queue`)
+        .subscribe((_) => (this.queue = _.queue));
 
     if (this.phase == 3) this.realtime += this.hrs + this.mins / 60;
 
