@@ -264,6 +264,10 @@ export class MapComponent {
     this.markerService.makeParkingMarkers(this.map);
   }
 
+  getPayment(evt: number) {
+    this.user.balance = evt;
+  }
+
   leftParking() {
     this.route?.remove();
   }

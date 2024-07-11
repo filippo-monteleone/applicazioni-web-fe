@@ -94,6 +94,8 @@ export class ParkingComponent {
   es: EventSource | undefined;
   howLongWillItTake: number = 0;
 
+  @Output() notifyPayment: EventEmitter<number> = new EventEmitter<number>();
+
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -227,6 +229,12 @@ export class ParkingComponent {
   }
 
   retract() {
+    setTimeout(() => {
+      this.http
+        .get<{ balance: number }>('/api/user')
+        .subscribe((_) => this.notifyPayment.emit(_.balance));
+    }, 10000);
+
     this.expand = false;
     this.shouldRetractSub.emit(true);
     this.arrived = false;

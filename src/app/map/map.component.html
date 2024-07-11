@@ -5,6 +5,7 @@
       class="test"
       [shouldExpand]="changingValue"
       (shouldRetractSub)="leftParking()"
+      (notifyPayment)="getPayment($event)"
     ></app-parking>
     <app-place-car-park
       class="test"
