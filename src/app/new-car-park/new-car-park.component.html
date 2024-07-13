@@ -4,7 +4,7 @@
     <h2>Back</h2>
   </span>
   <h2>Create a new car park</h2>
-  <form [formGroup]="parkForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="parkForm" (ngSubmit)="onSubmit()" (change)="changing()">
     <div class="price-container">
       <mat-form-field>
         <mat-label>Name</mat-label>
@@ -54,5 +54,6 @@
       </mat-form-field>
     </div>
     <button mat-flat-button color="primary">Create</button>
+    <p class="error">{{ error }}</p>
   </form>
 </div>

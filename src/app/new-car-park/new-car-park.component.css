@@ -40,3 +40,8 @@
     gap: 0.5rem;
   }
 }
+
+.error {
+  margin-top: 2em;
+  color: red;
+}

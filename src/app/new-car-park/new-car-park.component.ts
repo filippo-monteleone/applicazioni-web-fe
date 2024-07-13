@@ -17,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 export class NewCarParkComponent {
   lat: number = 0;
   lng: number = 0;
+  error: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +46,8 @@ export class NewCarParkComponent {
     const power = this.parkForm.get('power')?.value;
     console.log(name, parkRate, chargeRate, this.lat, this.lng, power);
 
+    this.parkForm.valueChanges.subscribe((_) => console.log(_));
+
     this.http
       .post('/api/car-park', {
         name,
@@ -55,7 +58,13 @@ export class NewCarParkComponent {
         lng: this.lng.toString(),
         power,
       })
-      .subscribe((_) => {});
+      .subscribe({
+        next: (data) => {},
+        error: (error) => {
+          this.error = error.error.detail;
+          console.log(error.error);
+        },
+      });
   }
 
   ngOnInit() {
