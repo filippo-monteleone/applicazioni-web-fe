@@ -67,6 +67,10 @@ export class NewCarParkComponent {
       });
   }
 
+  changing() {
+    this.error = '';
+  }
+
   ngOnInit() {
     console.log(this.lat, this.lng);
   }
