@@ -152,7 +152,12 @@ export class DashboardComponent {
           userId: number;
         }[];
         length: number;
-      }>(`/api/car-park/${i}/car-spots?page=1&resultsPerPage=10`)
+      }>(`/api/car-park/${i}/car-spots`, {
+        params: {
+          page: 0,
+          resultsPerPage: 10,
+        },
+      })
       .subscribe((_) => {
         let parkSpots: ParkSpot[] = [];
 
@@ -164,7 +169,6 @@ export class DashboardComponent {
           });
         });
 
-        console.log(parkSpots);
         this.parkSource = parkSpots;
         this.length = _.length;
       });
@@ -219,13 +223,31 @@ export class DashboardComponent {
     // .subscribe();
     if (this.selectedVal == 'carparks') {
       this.http
-        .get<{ length: number }>(`/api/car-park/${i}/car-spots`, {
+        .get<{
+          carSpots: {
+            id: number;
+            userId: number;
+          }[];
+          length: number;
+        }>(`/api/car-park/${i}/car-spots`, {
           params: {
             page: e.pageIndex + 1,
             resultsPerPage: 10,
           },
         })
         .subscribe((_) => {
+          console.log(_);
+          let parkSpots: ParkSpot[] = [];
+
+          _.carSpots.forEach((element) => {
+            parkSpots.push({
+              name: element.userId?.toString(),
+              position: element.id,
+              free: element.userId == null,
+            });
+          });
+
+          this.parkSource = parkSpots;
           this.length = _.length;
         });
     } else {
