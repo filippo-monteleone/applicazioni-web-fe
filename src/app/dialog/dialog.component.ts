@@ -143,6 +143,9 @@ export class DialogComponent {
     batterySize = 10,
     power = 10
   ) {
+    console.log(localStorage.getItem('battery'));
+    batterySize = JSON.parse(localStorage.getItem('battery') ?? '');
+
     this.cost = this.calculateCost(valueStart, valueEnd, batterySize);
     this.time = this.calcualteTime(
       valueStart,
@@ -220,7 +223,10 @@ export class DialogComponent {
         battery: Number(battery),
         pro: this.isChecked,
       })
-      .subscribe((_) => console.log(_));
+      .subscribe((_) => {
+        localStorage.setItem('battery', battery.toString());
+        console.log(localStorage.getItem('battery'), 'local', _);
+      });
 
     this.http
       .get<{
@@ -231,6 +237,7 @@ export class DialogComponent {
       }>('/api/user')
       .subscribe((user) => {
         console.log(user);
+        localStorage.setItem('user', JSON.stringify(user));
         this.http.get<string[]>('/api/role').subscribe((role) => {
           this.auth.user.next({ ...user, roles: role });
         });

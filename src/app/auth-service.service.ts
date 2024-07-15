@@ -12,6 +12,7 @@ export class AuthServiceService {
     username: string;
     roles: string[];
     balance?: number;
+    battery?: number;
   }>();
   public username = new ReplaySubject<string>();
   public authenticated = new ReplaySubject<boolean>();
@@ -24,7 +25,9 @@ export class AuthServiceService {
   login(username: string, password: string) {
     this.http.post('api/login', { username, password }).subscribe(() => {
       this.http
-        .get<{ username: string; balance: number }>('/api/user')
+        .get<{ username: string; balance: number; battery: number }>(
+          '/api/user'
+        )
         .subscribe((user) => {
           this.username.next(username);
           this.user.next({
@@ -32,10 +35,12 @@ export class AuthServiceService {
             roles: [],
             balance: user.balance,
           });
+          localStorage.setItem('battery', JSON.stringify(user.battery));
         });
 
       const authToken = 'testoken';
       localStorage.setItem(this.authSecretKey, authToken);
+
       this.isAuthenticated = true;
     });
   }
