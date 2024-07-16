@@ -143,7 +143,6 @@ export class DialogComponent {
     batterySize = 10,
     power = 10
   ) {
-    console.log(localStorage.getItem('battery'));
     batterySize = JSON.parse(localStorage.getItem('battery') ?? '');
 
     this.cost = this.calculateCost(valueStart, valueEnd, batterySize);

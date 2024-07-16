@@ -1,6 +1,12 @@
 @if (init) {
 <mat-card [class.retract]="shouldRetract" [class.extend]="expand">
   <div class="container">
+    @if (arrived && !inTraffic) { } @else if (!inTraffic) { } @else {
+    <button mat-icon-button class="btn-close" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+    }
+
     <div class="head-info">
       <mat-card-header>
         <mat-card-title-group>

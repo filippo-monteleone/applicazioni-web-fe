@@ -124,18 +124,17 @@ export class ParkingComponent {
         let powerInterval = setInterval(() => {
           // console.log(this.shouldRetract);
           // this.shouldExpand = !this.shouldExpand;
+          console.log(this.info, '16');
 
           if (this.price < this.info?.chargeCurrent!)
             this.price = this.info?.chargeCurrent!;
 
           this.price += this.info?.stepCurrent! + this.info?.stepPark!;
-          this.price = Number(this.price.toFixed(2));
 
           if (this.batteryPower < this.info?.battery!)
             this.batteryPower = this.info?.battery!;
 
           this.batteryPower += this.info?.batteryStep!;
-          this.batteryPower = Number(this.batteryPower.toFixed(2));
         }, 1000);
 
         let leaveTimeout = setTimeout(() => {
@@ -226,6 +225,13 @@ export class ParkingComponent {
     this.es.onerror = (ev) => {
       console.log('errore');
     };
+  }
+
+  close() {
+    this.expand = false;
+    this.shouldRetractSub.emit(true);
+    this.arrived = false;
+    this.inTraffic = true;
   }
 
   retract() {

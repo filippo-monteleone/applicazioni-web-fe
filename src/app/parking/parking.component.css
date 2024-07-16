@@ -6,6 +6,12 @@
   gap: 0.3rem;
 }
 
+.btn-close {
+  position: absolute;
+  top: 0em;
+  right: 0.5em;
+}
+
 .head-info {
   display: flex;
   flex-direction: column;
