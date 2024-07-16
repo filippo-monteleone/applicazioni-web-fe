@@ -24,6 +24,7 @@ export class ParkingComponent {
   price: number = 0;
   shouldRetract: boolean = false;
   expand: boolean = false;
+  error: string = '';
   init: boolean = false;
   inTraffic: boolean = true;
   info:
@@ -169,7 +170,12 @@ export class ParkingComponent {
     this.es.onmessage = (ev) => {
       let obj: { pos: number; time?: number } = JSON.parse(ev.data);
 
+      console.log(obj);
+
       this.cars = Number(obj.pos);
+
+      console.log(this.cars);
+
       if (this.cars == -1) {
         this.inTraffic = false;
         this.arrived = true;
@@ -177,7 +183,6 @@ export class ParkingComponent {
         console.log(obj.time);
 
         if (obj.pos == -1) {
-          console.log('qua');
           this.http
             .get<{
               id: number;
@@ -261,43 +266,47 @@ export class ParkingComponent {
           timePark: this.info?.timePark,
         }
       )
-      .subscribe((_) => {
-        this.endAt = new Date(_.endParking);
+      .subscribe(
+        (_) => {
+          console.log(_);
+          this.endAt = new Date(_.endParking);
 
-        if (_.status == 'Full') {
-          this.inTraffic = false;
-          this.arrived = false;
-        } else {
-          this.inTraffic = false;
-          this.arrived = true;
+          if (_.status == 'Full') {
+            this.inTraffic = false;
+            this.arrived = false;
+          } else {
+            this.inTraffic = false;
+            this.arrived = true;
 
-          let chargeInterval = setInterval(() => {
-            this.price += this.info?.parkRate! / 60 / 60;
-          }, 1000);
+            let chargeInterval = setInterval(() => {
+              this.price += this.info?.parkRate! / 60 / 60;
+            }, 1000);
 
-          let powerInterval = setInterval(async () => {
-            // console.log(this.shouldRetract);
-            // this.shouldExpand = !this.shouldExpand;
+            let powerInterval = setInterval(async () => {
+              // console.log(this.shouldRetract);
+              // this.shouldExpand = !this.shouldExpand;
 
-            this.price += this.info?.chargePricePerSec!;
+              this.price += this.info?.chargePricePerSec!;
 
-            let t = this.info?.targetCharge! - this.info?.currentCharge!;
-            t = t / (this.info?.time! * 60 * 60);
-            this.batteryPower += t;
-          }, 1000);
+              let t = this.info?.targetCharge! - this.info?.currentCharge!;
+              t = t / (this.info?.time! * 60 * 60);
+              this.batteryPower += t;
+            }, 1000);
 
-          console.log(
-            dayjs(_.endParking).valueOf() - new Date().getTime(),
-            '6'
-          );
+            console.log(
+              dayjs(_.endParking).valueOf() - new Date().getTime(),
+              '6'
+            );
 
-          let leaveTimeout = setTimeout(() => {
-            this.retract();
-            clearInterval(chargeInterval);
-            clearInterval(powerInterval);
-            this.price = 0;
-          }, dayjs(_.endParking).valueOf() - new Date().getTime());
-        }
-      });
+            let leaveTimeout = setTimeout(() => {
+              this.retract();
+              clearInterval(chargeInterval);
+              clearInterval(powerInterval);
+              this.price = 0;
+            }, dayjs(_.endParking).valueOf() - new Date().getTime());
+          }
+        },
+        (error) => (this.error = error.error)
+      );
   }
 }

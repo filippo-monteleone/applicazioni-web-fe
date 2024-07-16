@@ -6,7 +6,6 @@
       <mat-icon>close</mat-icon>
     </button>
     }
-
     <div class="head-info">
       <mat-card-header>
         <mat-card-title-group>
@@ -53,7 +52,10 @@
     } @else if (!inTraffic) {
     <button mat-flat-button color="warn">Leave</button>
     } @else {
-    <button mat-flat-button (click)="checkIn()">Check In</button>
+    <div style="display: flex; flex-direction: column">
+      <button mat-flat-button (click)="checkIn()">Check In</button>
+      <p class="error">{{ error }}</p>
+    </div>
     }
   </mat-card-actions>
 </mat-card>
