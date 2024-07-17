@@ -270,7 +270,27 @@ export class DashboardComponent {
         basic: this.filtersObj.Basic,
         premium: this.filtersObj.Premium,
       };
-      if (this.startDate == undefined)
+      if (this.startDate == undefined && this.endDate)
+        query = {
+          page: e.pageIndex + 1,
+          resultsPerPage: 10,
+          parking: this.filtersObj.Parking,
+          charging: this.filtersObj.Charging,
+          basic: this.filtersObj.Basic,
+          premium: this.filtersObj.Premium,
+          endDate: this.endDate?.valueOf(),
+        };
+      if (this.endDate == undefined && this.startDate)
+        query = {
+          page: e.pageIndex + 1,
+          resultsPerPage: 10,
+          parking: this.filtersObj.Parking,
+          charging: this.filtersObj.Charging,
+          basic: this.filtersObj.Basic,
+          premium: this.filtersObj.Premium,
+          startDate: this.startDate?.valueOf(),
+        };
+      if (this.endDate == undefined && this.startDate == undefined)
         query = {
           page: e.pageIndex + 1,
           resultsPerPage: 10,
@@ -289,7 +309,7 @@ export class DashboardComponent {
             paid: number;
             pro: boolean;
             dateStart: Date;
-            dateEnd: Date;
+            endDate: Date;
           }[];
         }>(`/api/payments`, {
           params: query,
@@ -304,7 +324,7 @@ export class DashboardComponent {
               userType: element.pro ? 'Pro' : 'Basic',
               cost: element.paid,
               dateStart: element.dateStart,
-              dateEnd: element.dateEnd,
+              dateEnd: element.endDate,
             });
           });
 
@@ -352,6 +372,8 @@ export class DashboardComponent {
     // this.sharedService.setData('Close');
   }
 
+  refresh() {}
+
   filters(
     check: boolean,
     index: 'Start' | 'End' | 'Basic' | 'Premium' | 'Charging' | 'Parking'
@@ -398,7 +420,28 @@ export class DashboardComponent {
       basic: this.filtersObj.Basic,
       premium: this.filtersObj.Premium,
     };
-    if (this.startDate == undefined)
+
+    if (this.startDate == undefined && this.endDate)
+      query = {
+        page: 1,
+        resultsPerPage: 10,
+        parking: this.filtersObj.Parking,
+        charging: this.filtersObj.Charging,
+        basic: this.filtersObj.Basic,
+        premium: this.filtersObj.Premium,
+        endDate: this.endDate?.valueOf(),
+      };
+    if (this.endDate == undefined && this.startDate)
+      query = {
+        page: 1,
+        resultsPerPage: 10,
+        parking: this.filtersObj.Parking,
+        charging: this.filtersObj.Charging,
+        basic: this.filtersObj.Basic,
+        premium: this.filtersObj.Premium,
+        startDate: this.startDate?.valueOf(),
+      };
+    if (this.endDate == undefined && this.startDate == undefined)
       query = {
         page: 1,
         resultsPerPage: 10,

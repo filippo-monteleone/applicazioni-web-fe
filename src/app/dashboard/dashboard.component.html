@@ -92,7 +92,7 @@
   </ul>
 
   } @else {
-  <mat-expansion-panel>
+  <mat-expansion-panel style="margin-top: 2rem; margin-bottom: 2rem">
     <mat-expansion-panel-header>
       <mat-panel-title> Filters </mat-panel-title>
       <mat-panel-description> Filter payments </mat-panel-description>
@@ -134,6 +134,12 @@
         >Premium</mat-checkbox
       >
     </div>
+    <!-- <div style="display: flex">
+      <button mat-flat-button style="margin: auto auto" (click)="refresh()">
+        <mat-icon>search</mat-icon>
+        Search
+      </button>
+    </div> -->
   </mat-expansion-panel>
 
   <h4>Payments</h4>
