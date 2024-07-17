@@ -242,7 +242,9 @@ export class ParkingComponent {
   retract() {
     setTimeout(() => {
       this.http
-        .get<{ balance: number }>('/api/user')
+        .get<{ balance: number; battery: number; name: string; pro: boolean }>(
+          '/api/user'
+        )
         .subscribe((_) => this.notifyPayment.emit(_.balance));
     }, 10000);
 
