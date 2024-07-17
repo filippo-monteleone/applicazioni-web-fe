@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIcon } from '@angular/material/icon';
 import { Location } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
@@ -22,7 +23,8 @@ export class NewCarParkComponent {
   constructor(
     private route: ActivatedRoute,
     private _location: Location,
-    public http: HttpClient
+    public http: HttpClient,
+    private _snackBar: MatSnackBar
   ) {
     this.route.queryParams.subscribe((params) => {
       this.lat = Number(params['lat']);
@@ -59,7 +61,12 @@ export class NewCarParkComponent {
         power,
       })
       .subscribe({
-        next: (data) => {},
+        next: (data) => {
+          this._snackBar.open('Carpark created', 'Ok');
+          setTimeout(() => {
+            this._snackBar.dismiss();
+          }, 3000);
+        },
         error: (error) => {
           this.error = error.error.detail;
           console.log(error.error);
