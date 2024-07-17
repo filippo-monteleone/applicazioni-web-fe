@@ -19,7 +19,7 @@
       [hidden]="hideUi"
     >
       <mat-icon>menu</mat-icon>
-      <span> {{ user.balance }}€</span>
+      <span> {{ user.balance?.toFixed(2) }}€</span>
     </button>
     <button
       mat-raised-button
