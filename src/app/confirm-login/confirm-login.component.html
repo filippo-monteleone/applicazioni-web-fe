@@ -14,11 +14,18 @@
                   placeholder="Ex. code123"
                   formControlName="invite"
                   required
+                  (input)="codeInput()"
                 />
               </mat-form-field>
             </div>
             <div class="footer">
               <button mat-flat-button color="primary">Next</button>
+            </div>
+            <div
+              [hidden]="!error"
+              style="color: red; margin: 1rem 0; text-align: center"
+            >
+              Invalid code
             </div>
           </form>
         </div>

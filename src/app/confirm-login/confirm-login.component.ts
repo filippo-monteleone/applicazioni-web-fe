@@ -32,7 +32,8 @@ export class ConfirmLoginComponent {
     this.http.get('/api/role', {}).subscribe(() => this.router.navigate(['']));
   }
 
-  private skip: boolean = false;
+  error: boolean = false;
+
   private map: L.Map | undefined;
 
   private initMap(): void {
@@ -65,6 +66,10 @@ export class ConfirmLoginComponent {
       ?.remove();
   }
 
+  codeInput() {
+    this.error = false;
+  }
+
   ngAfterViewInit(): void {
     this.initMap();
   }
@@ -78,8 +83,9 @@ export class ConfirmLoginComponent {
   async onSubmit() {
     const invite = this.codeForm.get('invite')?.value;
 
-    this.http
-      .post('/api/role', { invite })
-      .subscribe(() => this.router.navigate(['']));
+    this.http.post('/api/role', { invite }).subscribe({
+      next: () => this.router.navigate(['']),
+      error: () => (this.error = true),
+    });
   }
 }
