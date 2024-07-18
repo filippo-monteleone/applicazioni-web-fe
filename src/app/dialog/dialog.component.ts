@@ -99,7 +99,6 @@ export class DialogComponent {
   }
 
   ngOnInit() {
-    console.log(this.data, '7/5');
     this.http
       .get<{
         balance: number;

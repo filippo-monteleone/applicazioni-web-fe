@@ -13,9 +13,11 @@ export class AuthServiceService {
     roles: string[];
     balance?: number;
     battery?: number;
+    error?: boolean;
   }>();
   public username = new ReplaySubject<string>();
   public authenticated = new ReplaySubject<boolean>();
+  public error = true;
 
   constructor(public http: HttpClient) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
@@ -23,25 +25,32 @@ export class AuthServiceService {
   }
 
   login(username: string, password: string) {
-    this.http.post('api/login', { username, password }).subscribe(() => {
-      this.http
-        .get<{ username: string; balance: number; battery: number }>(
-          '/api/user'
-        )
-        .subscribe((user) => {
-          this.username.next(username);
-          this.user.next({
-            username: user.username,
-            roles: [],
-            balance: user.balance,
+    this.http.post('api/login', { username, password }).subscribe({
+      next: () => {
+        this.error = false;
+        this.http
+          .get<{ username: string; balance: number; battery: number }>(
+            '/api/user'
+          )
+          .subscribe((user) => {
+            this.username.next(username);
+            this.user.next({
+              username: user.username,
+              roles: [],
+              balance: user.balance,
+              error: false,
+            });
+            localStorage.setItem('battery', JSON.stringify(user.battery));
           });
-          localStorage.setItem('battery', JSON.stringify(user.battery));
-        });
 
-      const authToken = 'testoken';
-      localStorage.setItem(this.authSecretKey, authToken);
+        const authToken = 'testoken';
+        localStorage.setItem(this.authSecretKey, authToken);
 
-      this.isAuthenticated = true;
+        this.isAuthenticated = true;
+      },
+      error: () => {
+        this.user.next({ username: '', roles: [], error: true });
+      },
     });
   }
 

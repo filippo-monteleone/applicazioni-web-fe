@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import {
   Router,
   RouterLink,
@@ -50,7 +52,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthServiceService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private _snackBar: MatSnackBar
   ) {}
 
   private initMap(): void {
@@ -101,11 +104,15 @@ export class LoginComponent {
     if (username && password) {
       this.authService.login(username, password);
       this.authService.user.subscribe((data) => {
-        console.log(data);
-        if (data.username != '') this.router.navigate(['/']);
+        if (data.error)
+          this._snackBar.open('Username or email are not correct', 'Ok', {
+            duration: 3000,
+          });
+        if (data.username != '') {
+          this.router.navigate(['/']);
+        }
       });
     }
-
     console.log(username, password);
   }
 }
