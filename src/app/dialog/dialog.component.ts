@@ -83,6 +83,11 @@ export class DialogComponent {
     };
   } = inject(MAT_DIALOG_DATA) ?? { type: '' };
 
+  preloadedUserData: {
+    balance: number;
+    battery: number;
+  } = { balance: 0, battery: 0 };
+
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
     private http: HttpClient,
@@ -95,6 +100,18 @@ export class DialogComponent {
 
   ngOnInit() {
     console.log(this.data, '7/5');
+    this.http
+      .get<{
+        balance: number;
+        battery: number;
+        pro: boolean;
+        username: string;
+      }>('/api/user')
+      .subscribe((user) => {
+        this.preloadedUserData.balance = user.balance;
+        this.preloadedUserData.battery = user.battery;
+        this.isChecked = user.pro;
+      });
   }
 
   nextPhase() {
@@ -235,7 +252,6 @@ export class DialogComponent {
         username: string;
       }>('/api/user')
       .subscribe((user) => {
-        console.log(user);
         localStorage.setItem('user', JSON.stringify(user));
         this.http.get<string[]>('/api/role').subscribe((role) => {
           this.auth.user.next({ ...user, roles: role });

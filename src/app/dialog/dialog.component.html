@@ -81,12 +81,24 @@
       <div class="test">
         <mat-form-field>
           <mat-label>Balance - €</mat-label>
-          <input matInput type="number" min="0" #balance />
+          <input
+            matInput
+            type="number"
+            min="0"
+            #balance
+            [(ngModel)]="preloadedUserData.balance"
+          />
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Battery size - KW</mat-label>
-          <input matInput type="number" min="1" #battery />
+          <input
+            matInput
+            type="number"
+            min="1"
+            #battery
+            [(ngModel)]="preloadedUserData.battery"
+          />
         </mat-form-field>
       </div>
     </mat-expansion-panel>
