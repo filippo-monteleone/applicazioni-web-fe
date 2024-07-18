@@ -32,6 +32,7 @@ export class ConfirmLoginComponent {
     this.http.get('/api/role', {}).subscribe(() => this.router.navigate(['']));
   }
 
+  private skip: boolean = false;
   private map: L.Map | undefined;
 
   private initMap(): void {
@@ -66,6 +67,12 @@ export class ConfirmLoginComponent {
 
   ngAfterViewInit(): void {
     this.initMap();
+  }
+
+  skipMethod() {
+    this.http
+      .post('/api/role', { invite: 'user' })
+      .subscribe(() => this.router.navigate(['']));
   }
 
   async onSubmit() {

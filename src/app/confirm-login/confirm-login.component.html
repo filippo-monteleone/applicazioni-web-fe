@@ -19,12 +19,14 @@
             </div>
             <div class="footer">
               <button mat-flat-button color="primary">Next</button>
-              <p>
-                don't have a code?
-                <button mat-button>Skip</button>
-              </p>
             </div>
           </form>
+        </div>
+        <div class="footer">
+          <p>
+            don't have a code?
+            <button mat-button (click)="skipMethod()">Skip</button>
+          </p>
         </div>
       </mat-card-content>
     </mat-card>
