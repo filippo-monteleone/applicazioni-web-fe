@@ -22,6 +22,7 @@ import { PlaceCarParkComponent } from '../place-car-park/place-car-park.componen
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../auth-service.service';
 import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const iconRetinaUrl = 'assets/marker-icon-2x.png';
 const iconUrl = 'assets/marker-icon.png';
@@ -146,26 +147,13 @@ export class MapComponent {
     public dialog: MatDialog,
     private routerNav: Router,
     private auth: AuthServiceService,
-    private http: HttpClient
+    private http: HttpClient,
+    private _snackBar: MatSnackBar
   ) {
     this.auth.user.subscribe((val) => {
-      console.log(val);
       this.user = val;
       this.isAdmin = this.checkAdmin();
     });
-
-    // this.es = new EventSource('/api/car-park/updates');
-    // this.es.onopen = (ev) => {
-    //   console.log('aperto');
-    // };
-
-    // this.es.onmessage = (ev) => {
-    //   console.log('messaggio', ev);
-    // };
-
-    // this.es.onerror = (ev) => {
-    //   console.log('errore');
-    // };
 
     this.http
       .get<{
@@ -214,7 +202,6 @@ export class MapComponent {
 
     this.markerService.openedDialog$.subscribe((marker) => {
       if (this.hideUi) return;
-      console.log(marker);
 
       this.firstWaypoint = new L.LatLng(marker.latlng.lat, marker.latlng.lng);
 
@@ -227,7 +214,13 @@ export class MapComponent {
         power: number;
       } = marker.target.options;
 
-      console.log('7/5', marker.target.options);
+      if (this.user.battery == 0) {
+        this._snackBar.open("You haven't specified the battery size!", '', {
+          duration: 5000,
+        });
+        this.dialog.closeAll();
+        return;
+      }
 
       let mydialog = this.dialog.open(DialogComponent, {
         data: { type: 'buy', info },
