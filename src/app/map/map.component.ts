@@ -106,6 +106,7 @@ export class MapComponent {
   @ViewChild(PlaceCarParkComponent) pcp!: PlaceCarParkComponent;
 
   private initMap(): void {
+    if (this.map) return;
     this.map = L.map('map', {
       zoomControl: false,
       center: [39.8282, -98.5795],
@@ -253,6 +254,7 @@ export class MapComponent {
           pos.coords.longitude
         );
       });
+
     this.initMap();
     this.markerService.makeParkingMarkers(this.map);
   }
