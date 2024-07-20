@@ -120,8 +120,6 @@ export class ParkingComponent {
       this.name = this.info.name;
 
       if (this.info.endParking) {
-        console.log(this.info, 'eee');
-
         let powerInterval = setInterval(() => {
           // console.log(this.shouldRetract);
           // this.shouldExpand = !this.shouldExpand;
@@ -308,7 +306,9 @@ export class ParkingComponent {
             }, dayjs(_.endParking).valueOf() - new Date().getTime());
           }
         },
-        (error) => (this.error = error.error)
+        (error) => {
+          this.error = error.error.detail;
+        }
       );
   }
 }
