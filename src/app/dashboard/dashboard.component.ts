@@ -94,7 +94,7 @@ export class DashboardComponent {
   parkSource = PARK_DATA;
   paymentSource = PAY_DATA;
   length: number = 0;
-  page: number = 1;
+  page: number = 0;
 
   carParks: CarPark[] | undefined;
 
