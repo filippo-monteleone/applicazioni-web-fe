@@ -235,6 +235,7 @@ export class ParkingComponent {
     this.shouldRetractSub.emit(true);
     this.arrived = false;
     this.inTraffic = true;
+    this.error = '';
   }
 
   retract() {
@@ -251,6 +252,7 @@ export class ParkingComponent {
     this.arrived = false;
     this.inTraffic = true;
     this.http.post('/api/payments/settle', {}).subscribe((_) => console.log(_));
+    this.error = '';
     // this.shouldRetract = true;
   }
 
