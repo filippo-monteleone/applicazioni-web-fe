@@ -14,7 +14,7 @@ Una volta verificata l'installazione di Node.js, puoi iniziare a configurare il 
 
 Per il database, si utilizza PostgreSQL. Si ricorda che è necessario sostituire la connection string nel file appsettings con le proprie impostazioni come l’host, la porta, il nome del DB, l’username e la password. 
 
-Per esempio per avviarlo con docker eseguire i seguenti comandi:
+Per esempio per avviarlo con docker eseguire i seguenti comandi (Altrimenti usare pgAdmin):
 1. ```docker run --name web-postgress -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres``` (comando per creare un container di postgres)
    - ```-e POSTGRES_PASSWORD=mysecretpassword``` definisce la password del database
 2. ``` docker exec -it web-postgress /bin/bash ``` (comando per accedere alla comandline del container)
